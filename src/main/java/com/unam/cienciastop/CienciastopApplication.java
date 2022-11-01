@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class CienciastopApplication {
 
 	public static void main(String[] args) {
-		System.out.println("HOLAAAAA");
 		SpringApplication.run(CienciastopApplication.class, args);
 	}
 
