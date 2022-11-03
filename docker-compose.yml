@@ -23,6 +23,14 @@ services:
       - .:/home/app
       - mvn_data:/root/.m2
 
+  pg:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=dev@cienciastop.com
+      - PGADMIN_DEFAULT_PASSWORD=SuperSecret
+    ports:
+      - "80:80"
+
 volumes:
   mvn_data:
   db_data:
