@@ -8,12 +8,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name="usuarios")
+@Table(name="usuarios",
+        uniqueConstraints = @UniqueConstraint(
+            columnNames = {"correo","num_institucional"}))
 public class Usuario implements Serializable{
 
     @Id

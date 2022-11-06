@@ -13,9 +13,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="productos")
+@Table(name="productos",
+        uniqueConstraints = @UniqueConstraint(columnNames = "codigo"))
 public class Producto implements Serializable{
 
     @Id
