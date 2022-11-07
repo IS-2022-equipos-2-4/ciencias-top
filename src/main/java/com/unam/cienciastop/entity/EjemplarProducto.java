@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -24,6 +25,7 @@ public class EjemplarProducto implements Serializable{
     private Integer idEjemplar;
 
     @Column(name = "disponible")
+    @ColumnDefault(value = "true")
     private Boolean disponible;
 
     //Llave foránea de producto

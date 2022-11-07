@@ -45,6 +45,7 @@ public class Usuario implements Serializable{
     private String telefono;
 
     @Column(name="activo")
+    @ColumnDefault(value = "true")
     private Boolean activo;
 
     @Column(name="esProveedor")
