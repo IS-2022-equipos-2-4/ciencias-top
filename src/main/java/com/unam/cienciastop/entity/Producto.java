@@ -1,23 +1,23 @@
 package com.unam.cienciastop.entity;
 
 import java.io.Serializable;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name="productos",
-        uniqueConstraints = @UniqueConstraint(columnNames = "codigo"))
+@Table(name="productos")
 public class Producto implements Serializable{
 
     @Id
@@ -25,10 +25,8 @@ public class Producto implements Serializable{
     @Column(name = "id_producto")
     private Integer idProducto; 
 
-    @Column(name="id_proveedor",nullable = false)
-    private Integer idProveedor;
-
-    @Column(name="codigo",nullable = false)
+    @Column(name="codigo",nullable = false,length = 12,unique = true)
+    @Pattern(regexp = "[A-Z0-9]")
     private String codigo;
 
     @Column(name="nombre")
@@ -40,14 +38,14 @@ public class Producto implements Serializable{
     @Column(name="costo",nullable = false)
     private Integer costo;
 
-    @Transient
+    //cantidad de productos disponibles para rentar
+    @Column(name = "stock")
     private Integer stock;
 
-    //relacion uno a muchos
-	@OneToMany(cascade = CascadeType.ALL,orphanRemoval = true)
-    // esta anotacion crea la llave foránea en las tablas 'hijas', en este caso EjemplarProducto
-    @JoinColumn(name = "id_producto")
-    private List<EjemplarProducto> productoItems;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="id_proveedor",nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Usuario proveedor;
 
     public Integer getId() {
         return idProducto;
@@ -57,12 +55,28 @@ public class Producto implements Serializable{
         this.idProducto = id;
     }
 
-    public Integer getIdProveedor() {
-        return idProveedor;
+    public Integer getIdProducto() {
+        return idProducto;
     }
 
-    public void setIdProveedor(Integer idProveedor) {
-        this.idProveedor = idProveedor;
+    public void setIdProducto(Integer idProducto) {
+        this.idProducto = idProducto;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
+
+    public Usuario getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(Usuario proveedor) {
+        this.proveedor = proveedor;
     }
 
     public String getCodigo() {

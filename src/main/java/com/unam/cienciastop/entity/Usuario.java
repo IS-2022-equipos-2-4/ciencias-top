@@ -8,15 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
-@Table(name="usuarios",
-        uniqueConstraints = @UniqueConstraint(
-            columnNames = {"correo","num_institucional"}))
+@Table(name="usuarios")
 public class Usuario implements Serializable{
 
     @Id
@@ -27,7 +24,7 @@ public class Usuario implements Serializable{
     @Column(name="nombre",length = 50)
     private String nombre;
 
-    @Column(name="correo")
+    @Column(name="correo",unique = true)
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.unam.mx$", message = "correo invalido")
     private String correo;
 
@@ -35,7 +32,7 @@ public class Usuario implements Serializable{
     @Pattern(regexp = "[A-Za-z0-9._-]$",message = "carcateres invalidos")
     private String contraseña;
 
-    @Column(name="num_institucional",length = 9)
+    @Column(name="num_institucional",length = 9,unique = true)
     @Pattern(regexp = "[0-9]", message = "no. de cuenta invalido")
     private String numInstitucional;
 
@@ -44,7 +41,7 @@ public class Usuario implements Serializable{
     private String carrera;
 
     @Column(name="telefono",length = 10)
-    @Pattern(regexp = "[0-9]{10}", message = "telefono invalido")
+    @Pattern(regexp = "[0-9]", message = "telefono invalido")
     private String telefono;
 
     @Column(name="activo")
@@ -135,6 +132,4 @@ public class Usuario implements Serializable{
     public void setEsAdmin(Boolean esAdmin) {
         this.esAdmin = esAdmin;
     }
-
-    
 }
