@@ -26,4 +26,14 @@ public class SvcProductoImpl implements SvcProducto{
         // TODO Auto-generated method stub
         return (List<Producto>) repoProducto.findAll();
     }
+
+    public void crearProducto(Producto producto, Integer idProveedor){
+       repoProducto.save(producto);
+       Integer unidades=producto.getStock();
+       for(i<0; i<unidades; i++){
+          EjemplarProducto e=new EjemplarProducto(true,producto);
+          svcEProducto.crearEjemplar(e);
+       }
+
+    }
 }

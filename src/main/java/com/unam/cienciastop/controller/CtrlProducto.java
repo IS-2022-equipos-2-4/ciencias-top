@@ -37,6 +37,6 @@ public class CtrlProducto {
     @PostMapping("/productos/{id_proveedor}")
     public ResponseEntity<Producto> crearProducto( @Valid @RequestBody Producto producto,
         @PathVariable(value = "id_proveedor") Integer idProveedor){
-        return null;
+        return new ResponseEntity<>(svcProducto.crearProducto(),HttpStatus.OK);
     }
 }
