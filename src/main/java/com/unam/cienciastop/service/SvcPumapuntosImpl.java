@@ -16,4 +16,11 @@ public class SvcPumapuntosImpl implements SvcPumapuntos{
         // TODO Auto-generated method stub
         return repoPuma.findById(idUsuario).get();
     }
+
+    @Override
+    void sumarPumapuntos(Integer idUsuario, Integer cantidad){
+        // TODO implementar
+        //repoPuma.findById(idUsuario).
+        return; 
+    }
 }
