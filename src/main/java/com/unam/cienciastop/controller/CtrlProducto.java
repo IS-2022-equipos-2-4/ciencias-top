@@ -29,7 +29,7 @@ public class CtrlProducto {
         return new ResponseEntity<>(svcProducto.getProductos(), HttpStatus.OK);
     }
 
-    @GetMapping("/producto/{id_producto}")
+    @GetMapping("/productos/{id_producto}")
     public ResponseEntity<Producto> buscarProducto(@PathVariable(value = "id_producto") Integer idProducto) {
         return null;
     }

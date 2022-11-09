@@ -27,6 +27,7 @@ public class SvcProductoImpl implements SvcProducto {
         return (List<Producto>) repoProducto.findAll();
     }
 
+    @Override
     public void crearProducto(Producto producto) {
 
         repoProducto.save(producto);
