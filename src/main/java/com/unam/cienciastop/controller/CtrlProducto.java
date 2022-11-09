@@ -36,6 +36,6 @@ public class CtrlProducto {
 
     @PostMapping("/productos/crear")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto) {
-        return new ResponseEntity<>(svcProducto.crearProducto(producto), HttpStatus.OK);
+        return new ResponseEntity<>(svcProducto.crearProducto(producto), HttpStatus.CREATED);
     }
 }
