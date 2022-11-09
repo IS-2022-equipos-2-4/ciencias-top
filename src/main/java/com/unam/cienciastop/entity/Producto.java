@@ -2,6 +2,7 @@ package com.unam.cienciastop.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,6 +17,9 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name="productos")
 public class Producto implements Serializable{
@@ -26,7 +30,7 @@ public class Producto implements Serializable{
     private Integer idProducto; 
 
     @Column(name="codigo",nullable = false,length = 12,unique = true)
-    @Pattern(regexp = "[A-Z0-9]")
+    @Pattern(regexp = "[A-Z0-9]*")
     private String codigo;
 
     @Column(name="nombre")
@@ -53,14 +57,6 @@ public class Producto implements Serializable{
 
     public void setId(Integer id) {
         this.idProducto = id;
-    }
-
-    public Integer getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(Integer idProducto) {
-        this.idProducto = idProducto;
     }
 
     public Integer getStock() {
