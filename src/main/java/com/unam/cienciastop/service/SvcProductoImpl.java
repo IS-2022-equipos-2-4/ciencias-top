@@ -33,7 +33,7 @@ public class SvcProductoImpl implements SvcProducto {
         Producto nuevo = (Producto) repoProducto.save(producto);
         Integer unidades = producto.getStock();
         for (int i = 0; i < unidades; i++) {
-            EjemplarProducto e = new EjemplarProducto(true, producto);
+            EjemplarProducto e = new EjemplarProducto(true, nuevo);
             svcEProducto.crearEjemplar(e);
         }
         return nuevo;
