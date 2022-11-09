@@ -7,5 +7,5 @@ import com.unam.cienciastop.entity.Producto;
 public interface SvcProducto {
     List<Producto> getProductos();
 
-    void crearProducto(Producto producto);
+    Producto crearProducto(Producto producto);
 }

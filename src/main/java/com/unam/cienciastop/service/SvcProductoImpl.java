@@ -28,14 +28,14 @@ public class SvcProductoImpl implements SvcProducto {
     }
 
     @Override
-    public void crearProducto(Producto producto) {
+    public Producto crearProducto(Producto producto) {
 
-        repoProducto.save(producto);
+        Producto nuevo = (Producto) repoProducto.save(producto);
         Integer unidades = producto.getStock();
         for (int i = 0; i < unidades; i++) {
             EjemplarProducto e = new EjemplarProducto(true, producto);
             svcEProducto.crearEjemplar(e);
         }
-
+        return nuevo;
     }
 }
