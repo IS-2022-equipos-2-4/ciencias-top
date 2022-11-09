@@ -10,7 +10,7 @@ import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.Producto;
 
 @Service
-public class SvcProductoImpl implements SvcProducto{
+public class SvcProductoImpl implements SvcProducto {
 
     @Autowired
     private DaoProducto repoProducto;
@@ -27,14 +27,14 @@ public class SvcProductoImpl implements SvcProducto{
         return (List<Producto>) repoProducto.findAll();
     }
 
-    public Producto crearProducto(Producto producto){
+    public void crearProducto(Producto producto) {
 
-       repoProducto.save(producto);
-       Integer unidades=producto.getStock();
-       for(int i=0; i<unidades; i++){
-          EjemplarProducto e=new EjemplarProducto(true,producto);
-          svcEProducto.crearEjemplar(e);
-       }
-       return producto;
+        repoProducto.save(producto);
+        Integer unidades = producto.getStock();
+        for (int i = 0; i < unidades; i++) {
+            EjemplarProducto e = new EjemplarProducto(true, producto);
+            svcEProducto.crearEjemplar(e);
+        }
+
     }
 }

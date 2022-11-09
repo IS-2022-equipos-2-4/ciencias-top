@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.unam.cienciastop.entity.Producto;
 
-public interface SvcProducto{
+public interface SvcProducto {
     List<Producto> getProductos();
 
-    Producto crearProducto(Producto producto);
+    void crearProducto(Producto producto);
 }

@@ -18,20 +18,20 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer" })
 @Entity
-@Table(name="ejemplar_productos")
-public class EjemplarProducto implements Serializable{
+@Table(name = "ejemplar_productos")
+public class EjemplarProducto implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id_ejemplar")
+    @Column(name = "id_ejemplar")
     private Integer idEjemplar;
 
     @Column(name = "disponible")
     @ColumnDefault(value = "true")
     private Boolean disponible;
 
-    //Llave foránea de producto
+    // Llave foránea de producto
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_producto")
     @OnDelete(action = OnDeleteAction.CASCADE)
