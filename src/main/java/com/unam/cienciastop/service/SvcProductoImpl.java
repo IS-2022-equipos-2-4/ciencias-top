@@ -27,13 +27,13 @@ public class SvcProductoImpl implements SvcProducto{
         return (List<Producto>) repoProducto.findAll();
     }
 
-    public void crearProducto(Producto producto, Integer idProveedor){
+    public Producto crearProducto(Producto producto, Integer idProveedor){
        repoProducto.save(producto);
        Integer unidades=producto.getStock();
-       for(i<0; i<unidades; i++){
+       for(int i=0; i<unidades; i++){
           EjemplarProducto e=new EjemplarProducto(true,producto);
           svcEProducto.crearEjemplar(e);
        }
-
+       return producto;
     }
 }
