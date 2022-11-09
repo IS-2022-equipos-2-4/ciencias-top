@@ -27,7 +27,7 @@ public class SvcProductoImpl implements SvcProducto {
         return (List<Producto>) repoProducto.findAll();
     }
 
-    public Producto crearProducto(Producto producto) {
+    public void crearProducto(Producto producto) {
 
         repoProducto.save(producto);
         Integer unidades = producto.getStock();
@@ -35,6 +35,6 @@ public class SvcProductoImpl implements SvcProducto {
             EjemplarProducto e = new EjemplarProducto(true, producto);
             svcEProducto.crearEjemplar(e);
         }
-        return producto;
+
     }
 }
