@@ -26,4 +26,13 @@ public class SvcProductoImpl implements SvcProducto{
         // TODO Auto-generated method stub
         return (List<Producto>) repoProducto.findAll();
     }
+
+    /*
+     * Metodo que recibe un id y regresa el objeto Producto
+     * asociado a dicho id.
+     */
+    @Override
+    public Producto getProductById(int id){
+        return repoProducto.getProductById(id);
+    }
 }

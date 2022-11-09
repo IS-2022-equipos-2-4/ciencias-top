@@ -29,9 +29,17 @@ public class CtrlProducto {
         return new ResponseEntity<>(svcProducto.getProductos(),HttpStatus.OK);
     }
 
+    /*
+     * Metodo que recibe un id y regresa el objeto Producto
+     * asociado a dicho id.
+     */
     @GetMapping("/producto/{id_producto}")
-    public ResponseEntity<Producto> buscarProducto(@PathVariable(value = "id_producto") Integer idProducto){
-        return null;
+    public ResponseEntity<Producto> getProductById(@PathVariable(value = "id_producto") Integer idProducto){
+        Producto producto = svcProducto.getProductById(idProducto);
+		if (producto != null)
+			return new ResponseEntity<>(producto,HttpStatus.OK);
+		else
+			return new ResponseEntity<>(producto,HttpStatus.NO_CONTENT);
     }
     
     @PostMapping("/productos/{id_proveedor}")
