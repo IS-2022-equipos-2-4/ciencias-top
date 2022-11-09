@@ -12,6 +12,9 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.ColumnDefault;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name="usuarios")
 public class Usuario implements Serializable{
@@ -29,7 +32,7 @@ public class Usuario implements Serializable{
     private String correo;
 
     @Column(name="contraseña")
-    @Pattern(regexp = "[A-Za-z0-9._-]$",message = "carcateres invalidos")
+    @Pattern(regexp = "[A-Za-z0-9._-]*",message = "carcateres invalidos")
     private String contraseña;
 
     @Column(name="num_institucional",length = 9,unique = true)

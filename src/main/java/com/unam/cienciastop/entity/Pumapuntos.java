@@ -8,6 +8,12 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
 @Table(name="pumapuntos")
 public class Pumapuntos {
@@ -23,6 +29,7 @@ public class Pumapuntos {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id_usuario")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario;
 
     public Integer getIdPumapuntos() {
