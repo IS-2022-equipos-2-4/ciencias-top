@@ -1,6 +1,7 @@
 package com.unam.cienciastop.service;
 
 import java.util.List;
+//import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,10 +10,11 @@ import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.Producto;
+import com.unam.cienciastop.entity.Usuario;
 
 @Service
 public class SvcProductoImpl implements SvcProducto {
-    
+
     @Autowired
     private DaoUsuario repoUsuario;
 
@@ -33,7 +35,7 @@ public class SvcProductoImpl implements SvcProducto {
 
     @Override
     public Producto crearProducto(Producto producto, Integer idProveedor) {
-        Usuario proveedor=(Usuario) repoUsuario.findbyid(idProveedor);
+        Usuario proveedor = (Usuario) repoUsuario.findById(idProveedor).get();
         producto.setProveedor(proveedor);
         Producto nuevo = (Producto) repoProducto.save(producto);
         Integer unidades = producto.getStock();
