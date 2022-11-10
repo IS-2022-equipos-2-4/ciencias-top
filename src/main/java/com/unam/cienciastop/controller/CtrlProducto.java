@@ -25,18 +25,17 @@ public class CtrlProducto {
     private SvcProducto svcProducto;
 
     @GetMapping("/productos")
-    public ResponseEntity<List<Producto>> getProductos(){
-        return new ResponseEntity<>(svcProducto.getProductos(),HttpStatus.OK);
+    public ResponseEntity<List<Producto>> getProductos() {
+        return new ResponseEntity<>(svcProducto.getProductos(), HttpStatus.OK);
     }
 
-    @GetMapping("/producto/{id_producto}")
-    public ResponseEntity<Producto> buscarProducto(@PathVariable(value = "id_producto") Integer idProducto){
+    @GetMapping("/productos/{id_producto}")
+    public ResponseEntity<Producto> buscarProducto(@PathVariable(value = "id_producto") Integer idProducto) {
         return null;
     }
-    
+
     @PostMapping("/productos/{id_proveedor}")
-    public ResponseEntity<Producto> crearProducto( @Valid @RequestBody Producto producto,
-        @PathVariable(value = "id_proveedor") Integer idProveedor){
-        return null;
+    public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto, @PathVariable(value = "id_proveedor") Integer idProveedor) {
+        return new ResponseEntity<>(svcProducto.crearProducto(producto,idProveedor), HttpStatus.CREATED);
     }
 }

@@ -19,35 +19,35 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer" })
 @Entity
-@Table(name="productos")
-public class Producto implements Serializable{
+@Table(name = "productos")
+public class Producto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_producto")
-    private Integer idProducto; 
+    private Integer idProducto;
 
-    @Column(name="codigo",nullable = false,length = 12,unique = true)
+    @Column(name = "codigo", nullable = false, length = 12, unique = true)
     @Pattern(regexp = "[A-Z0-9]*")
     private String codigo;
 
-    @Column(name="nombre")
+    @Column(name = "nombre")
     private String nombre;
 
-    @Column(name="descripcion")
+    @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(name="costo",nullable = false)
+    @Column(name = "costo", nullable = false)
     private Integer costo;
 
-    //cantidad de productos disponibles para rentar
+    // cantidad de productos disponibles para rentar
     @Column(name = "stock")
     private Integer stock;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="id_proveedor",nullable = false)
+    @JoinColumn(name = "id_proveedor", referencedColumnName = "id_usuario", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario proveedor;
 
