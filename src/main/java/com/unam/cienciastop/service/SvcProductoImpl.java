@@ -32,7 +32,27 @@ public class SvcProductoImpl implements SvcProducto{
      * asociado a dicho id.
      */
     @Override
-    public Producto getProductById(int id){
-        return repoProducto.getProductById(id);
+    public Producto getProducto_id(int id){
+        return repoProducto.getProducto_id(id);
+    }
+
+    /*
+     * Metodo que recibe un nombre y regresa la lista de objetos 
+     * Producto asociado a dicho nombre.
+     */
+    @Override
+    public List<Producto> getProductos_codigo(String codigo){
+        return repoProducto.getProductos_codigo(codigo);
+    }
+
+    /**
+     * Metodo que recibe un nombre y regresa la lista de objetos 
+     * Producto asociado a dicho nombre.
+     * @param nombre
+     * @return List<Producto>
+     */
+    @Override
+    public List<Producto> getProductos_nombre(String nombre){
+        return repoProducto.getProductos_nombre(nombre);
     }
 }
