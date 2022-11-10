@@ -12,15 +12,18 @@ public class SvcPumapuntosImpl implements SvcPumapuntos{
     private DaoPumapuntos repoPuma;
 
     @Override
-    public Pumapuntos getPumapuntos(Integer idUsuario) {
+    public int getPumapuntos(Integer idUsuario) {
         // TODO Auto-generated method stub
-        return repoPuma.findById(idUsuario).get();
+        return repoPuma.findById(idUsuario).get().getSaldo();
     }
 
+    
     @Override
-    void sumarPumapuntos(Integer idUsuario, Integer cantidad){
+    public void sumarPumapuntos(Integer idUsuario, Integer cantidad){
         // TODO implementar
-        //repoPuma.findById(idUsuario).
+        int saldo = repoPuma.findById(idUsuario).get().getSaldo();
+        saldo = saldo + cantidad;
+        repoPuma.findById(idUsuario).get().setSaldo(saldo);
         return; 
     }
 }
