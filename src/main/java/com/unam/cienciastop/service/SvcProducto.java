@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.unam.cienciastop.entity.Producto;
 
-public interface SvcProducto{
+public interface SvcProducto {
     List<Producto> getProductos();
 
     /*
@@ -26,4 +26,5 @@ public interface SvcProducto{
      * @return List<Producto>
      */
     public List<Producto> getProductos_nombre(String nombre);
+    Producto crearProducto(Producto producto, Integer idProveedor);
 }
