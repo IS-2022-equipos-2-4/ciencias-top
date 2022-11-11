@@ -36,20 +36,20 @@ public class Usuario implements Serializable{
     private String contraseña;
 
     @Column(name="num_institucional",length = 9,unique = true)
-    @Pattern(regexp = "[0-9]", message = "no. de cuenta invalido")
+    @Pattern(regexp = "[0-9]*", message = "no. de cuenta invalido")
     private String numInstitucional;
 
     @Column(name="carrera")
     @ColumnDefault(value = "'No aplica'")
-    private String carrera;
+    private String carrera = "No aplica";
 
     @Column(name="telefono",length = 10)
-    @Pattern(regexp = "[0-9]", message = "telefono invalido")
+    @Pattern(regexp = "[0-9]*", message = "telefono invalido")
     private String telefono;
 
-    @Column(name="activo")
+    @Column(name="activo",nullable = false)
     @ColumnDefault(value = "true")
-    private Boolean activo;
+    private Boolean activo = true;
 
     @Column(name="esProveedor")
     private Boolean esProveedor;
