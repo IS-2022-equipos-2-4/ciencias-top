@@ -39,10 +39,10 @@ public class CtrlUsuario {
         return null;
     }
 
-    @PostMapping("/usuarios/{id_usuario}")
+    @PatchMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> editarUsuario(
         @PathVariable(value = "id_usuario") Integer idUsuario,
-        @Valid @RequestBody Usuario usuario){
+        @Valid @RequestBody EditarUsuarioDto EditarUsuarioDto){
         return null;
     }
 }

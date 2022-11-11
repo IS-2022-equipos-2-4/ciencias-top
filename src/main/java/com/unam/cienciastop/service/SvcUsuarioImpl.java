@@ -19,4 +19,9 @@ public class SvcUsuarioImpl implements SvcUsuario{
         // TODO Auto-generated method stub
         return repoUsuario.getUsuariosActivos();
     }
+
+    @Override
+    public Usuario editarUsuario(EditarUsuarioDto editarUsuarioDto) {
+        repoUsuario.editarUsuario(editarUsuarioDto.id, editarUsuarioDto.nombre, editarUsuarioDto.telefono, );
+    }
 }

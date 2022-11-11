@@ -6,4 +6,6 @@ import com.unam.cienciastop.entity.Usuario;
 
 public interface SvcUsuario {
     List<Usuario> getUsuariosActivos();
+
+    public Usuario editarUsuario(EditarUsuarioDto EditarUsuarioDto);
 }
