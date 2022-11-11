@@ -22,17 +22,17 @@ public class CtrlPumapuntos {
     @GetMapping("/pumapuntos/{id_usuario}")
     public ResponseEntity<Pumapuntos> getPumapuntos(@PathVariable Integer idUsuario) {
         //TODO revisar si usuario tiene permisos
-        if(svc.Puma.getEsAdmin())
-            return new ResponseEntity<>(svcPuma.getPumapuntos(idUsuario),HttpStatus.OK);
+        // if(svc.Puma.getEsAdmin())
+        //     return new ResponseEntity<>(svcPuma.getPumapuntos(idUsuario),HttpStatus.OK);
     }
 
     @PostMapping("/pumapuntos/{id_usuario}/sumar/{cantidad}")
-    public ResponseEntity<HttpStatus> sumarPumapuntos(
+    public ResponseEntity<Pumapuntos> sumarPumapuntos(
         @PathVariable Integer idUsuario,
         @PathVariable Integer cantidad) {
         //TODO revisar si usuario tiene permisos
-        if(svc.Puma.getEsAdmin()){
-            return new ResponseEntity<>(svcPuma.sumarPumapuntos(idUsuario, cantidad), HttpStatus.OK);
-        }
+        // if(svc.Puma.getEsAdmin()){
+        //     return new ResponseEntity<>(svcPuma.sumarPumapuntos(idUsuario, cantidad), HttpStatus.OK);
+        // }
     }
 }
