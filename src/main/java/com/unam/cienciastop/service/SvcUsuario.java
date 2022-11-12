@@ -2,6 +2,8 @@ package com.unam.cienciastop.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.unam.cienciastop.entity.Usuario;
 
 public interface SvcUsuario {
@@ -18,12 +20,13 @@ public interface SvcUsuario {
      * asociado a dicho numero.
      */
     Usuario getUsuario_numeroInstitucional(String num_institucional);
-
     
     /**
      * Metodo que recibe un correo y regresa el objeto Usuario
      * asociado a dicho correo.
      */
     Usuario getUsuario_correo(String correo);
+
+    Usuario crearUsuario(Usuario usuario);
 
 }

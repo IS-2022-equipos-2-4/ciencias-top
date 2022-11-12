@@ -87,8 +87,8 @@ public class CtrlUsuario {
     }
 
     @PostMapping("/usuarios")
-    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario Usuario) {
-        return null;
+    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario){
+        return new ResponseEntity<>(svcUsuario.crearUsuario(usuario),HttpStatus.OK);
     }
 
     @PostMapping("/usuarios/{id_usuario}")
