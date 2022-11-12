@@ -31,6 +31,55 @@ public class CtrlUsuario {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
     }
 
+    /**
+     * Metodo que recibe un numero institucional de usuario y regresa el objeto Usuario
+     * asociado a dicho numero ingresado.
+     * 
+     * @param num_institucional
+     * @return ResponseEntity<Usuario>
+     */
+    @GetMapping("/usuario/{num_institucional}")
+    public ResponseEntity<Usuario> getUsuario_numeroInstitucional(
+            @PathVariable(value = "num_institucional") String num_institucional) {
+        Usuario usuario = svcUsuario.getUsuario_numeroInstitucional(num_institucional);
+        if (usuario != null)
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.
+     * 
+     * @param nombre
+     * @return ResponseEntity<List<Usuario>>
+     */
+    @GetMapping("/usuario/nombre/{nombre}")
+    public ResponseEntity<List<Usuario>> getUsuarios_nombre(
+            @PathVariable(value = "nombre") String nombre) {
+        List<Usuario> usuario = svcUsuario.getUsuarios_nombre(nombre);
+        if (usuario != null)
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Metodo que recibe un correo y regresa el objeto Usuario asociado a correo ingresado.
+     * 
+     * @param correo
+     * @return ResponseEntity<Usuario>
+     */
+    @GetMapping("/usuario/{correo}")
+    public ResponseEntity<Usuario> getUsuario_correo(
+            @PathVariable(value = "correo") String correo) {
+        Usuario usuario = svcUsuario.getUsuario_correo(correo);
+        if (usuario != null)
+            return new ResponseEntity<>(usuario, HttpStatus.OK);
+        else
+            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+    }
+
     @GetMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> buscarUsuario(
             @PathVariable(value = "id_usuario") Integer idUsuario) {
