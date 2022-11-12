@@ -31,21 +31,21 @@ public class SvcUsuarioImpl implements SvcUsuario{
     }
 
     /*
-     * Metodo que recibe un numero institucional y regresa el objeto Usuario
-     * asociado a dicho numero.
-     */
-    @Override
-    public Usuario getUsuario_numeroInstitucional(String num_institucional){
-        return repoUsuario.getUsuario_numeroInstitucional(num_institucional);
-    }
-
-    /*
      * Metodo que recibe un nombre y regresa la lista de objetos 
      * Usuario asociado a dicho nombre.
      */
     @Override
     public List<Usuario> getUsuarios_nombre(String nombre){
         return repoUsuario.getUsuarios_nombre(nombre);
+    }
+
+    /*
+     * Metodo que recibe un numero institucional y regresa el objeto Usuario
+     * asociado a dicho numero.
+     */
+    @Override
+    public Usuario getUsuario_numeroInstitucional(String num_institucional){
+        return repoUsuario.getUsuario_numeroInstitucional(num_institucional);
     }
 
     /*
