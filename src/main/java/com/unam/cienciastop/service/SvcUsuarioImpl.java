@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.entity.Usuario;
 
+import net.bytebuddy.asm.Advice.Return;
+
 @Service
 public class SvcUsuarioImpl implements SvcUsuario{
 
@@ -18,5 +20,11 @@ public class SvcUsuarioImpl implements SvcUsuario{
     public List<Usuario> getUsuariosActivos() {
         // TODO Auto-generated method stub
         return repoUsuario.getUsuariosActivos();
+    }
+
+    @Override
+    public Usuario crearUsuario(Usuario usuario){
+        
+        return repoUsuario.save(usuario);
     }
 }
