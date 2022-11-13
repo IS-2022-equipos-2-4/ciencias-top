@@ -17,12 +17,6 @@ public class SvcUsuarioImpl implements SvcUsuario{
     private DaoUsuario repoUsuario;
 
     @Autowired
-    private DaoProducto repoProducto;
-
-    @Autowired
-    private SvcEjemplarProducto svcEProducto;
-
-    @Autowired
     private SvcUsuario svcUsuario;
 
 
