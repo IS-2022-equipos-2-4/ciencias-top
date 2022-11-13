@@ -26,6 +26,11 @@ public class CtrlPumapuntos {
         return new ResponseEntity<>(svcPuma.getPumapuntos(idUsuario),HttpStatus.OK);
     }
 
+    /**
+     * @param idUsuario
+     * @param cantidad
+     * @return
+     */
     @PostMapping("/pumapuntos/{id_usuario}/sumar/{cantidad}")
     public ResponseEntity<Pumapuntos> sumarPumapuntos(
         @PathVariable Integer idUsuario,
