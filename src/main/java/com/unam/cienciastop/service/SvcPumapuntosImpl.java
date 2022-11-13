@@ -18,12 +18,12 @@ public class SvcPumapuntosImpl implements SvcPumapuntos{
 
     
     @Override
-    public void sumarPumapuntos(Integer idUsuario, Integer cantidad){               
-        Integer pumaPuntos = repoPuma.findById(idUsuario).get();
+    public Boolean sumarPumapuntos(Integer idUsuario, Integer cantidad){               
+        Pumapuntos pumaPuntos = repoPuma.findById(idUsuario).get();
         int saldo = pumaPuntos.getSaldo();
         saldo += cantidad;
         pumaPuntos.setSaldo(saldo);
         repoPuma.save(pumaPuntos);
-        return; 
+        return true; 
     }
 }

@@ -4,8 +4,8 @@ import com.unam.cienciastop.entity.Pumapuntos;
 
 public interface SvcPumapuntos {
     /** Regresa el saldo(pumapuntos) de un usuario */
-    Pumapuntos getPumapuntos(Integer idUsuario);
+    Integer getPumapuntos(Integer idUsuario);
 
     /** Suma puma puntos al idUsuario seleccionado, la cantidad puede ser negativa.  */
-    void sumarPumapuntos(Integer idUsuario, Integer cantidad);
+    Boolean sumarPumapuntos(Integer idUsuario, Integer cantidad);
 }
