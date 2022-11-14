@@ -30,7 +30,7 @@ public class Producto implements Serializable {
     private Integer idProducto;
 
     @Column(name = "codigo", nullable = false, length = 12, unique = true)
-    @Pattern(regexp = "[A-Z0-9]*")
+    @Pattern(regexp = "[A-Z0-9]{12}")
     private String codigo;
 
     @Column(name = "nombre")
