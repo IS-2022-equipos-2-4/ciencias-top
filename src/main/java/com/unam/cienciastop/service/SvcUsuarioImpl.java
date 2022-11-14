@@ -26,7 +26,6 @@ public class SvcUsuarioImpl implements SvcUsuario{
         } catch (DataAccessException e){
             throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
         } catch (Exception e) {
-            System.out.println(e.getClass().toString()); 
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
     }
@@ -42,7 +41,6 @@ public class SvcUsuarioImpl implements SvcUsuario{
         } catch (DataAccessException e){
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
         } catch (Exception e) {
-            System.out.println(e.getClass().toString()); 
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
     }
@@ -58,7 +56,6 @@ public class SvcUsuarioImpl implements SvcUsuario{
         } catch (DataAccessException e){
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
         } catch (Exception e) {
-            System.out.println(e.getClass().toString()); 
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
     }
@@ -74,7 +71,6 @@ public class SvcUsuarioImpl implements SvcUsuario{
         } catch (DataAccessException e){
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
         } catch (Exception e) {
-            System.out.println(e.getClass().toString()); 
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         } 
     }
@@ -88,7 +84,6 @@ public class SvcUsuarioImpl implements SvcUsuario{
         } catch (DataAccessException e){
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
         } catch (Exception e) {
-            System.out.println(e.getClass().toString()); 
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
     }

@@ -87,7 +87,6 @@ public class CtrlProducto {
             @PathVariable(value = "id_proveedor") Integer idProveedor) {
         
             if(bindingResult.hasErrors()) {
-                System.out.println("no entra?");
                 throw new ApiException(HttpStatus.BAD_REQUEST,bindingResult.getAllErrors().get(0).getDefaultMessage());
             }
         return new ResponseEntity<>(svcProducto.crearProducto(producto, idProveedor),HttpStatus.CREATED);
