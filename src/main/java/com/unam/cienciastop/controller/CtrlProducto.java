@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.unam.cienciastop.entity.Producto;
+import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcProducto;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -81,8 +83,13 @@ public class CtrlProducto {
 
     @PostMapping("/productos/{id_proveedor}")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto,
+            BindingResult bindingResult,
             @PathVariable(value = "id_proveedor") Integer idProveedor) {
-        return new ResponseEntity<>(svcProducto.crearProducto(producto, idProveedor),
-                HttpStatus.CREATED);
+        
+            if(bindingResult.hasErrors()) {
+                System.out.println("no entra?");
+                throw new ApiException(HttpStatus.BAD_REQUEST,bindingResult.getAllErrors().get(0).getDefaultMessage());
+            }
+        return new ResponseEntity<>(svcProducto.crearProducto(producto, idProveedor),HttpStatus.CREATED);
     }
 }

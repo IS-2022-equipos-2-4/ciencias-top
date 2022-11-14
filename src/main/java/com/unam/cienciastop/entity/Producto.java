@@ -30,7 +30,7 @@ public class Producto implements Serializable {
     private Integer idProducto;
 
     @Column(name = "codigo", nullable = false, length = 12, unique = true)
-    @Pattern(regexp = "[A-Z0-9]{12}")
+    @Pattern(regexp = "[A-Z0-9]{12}", message = "el codigo debe tener 12 caracteres y solo pueden ser mayusculas y numeros")
     private String codigo;
 
     @Column(name = "nombre")
