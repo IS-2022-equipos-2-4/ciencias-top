@@ -23,21 +23,21 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     public List<Usuario> getUsuarios_nombre(@Param("nombre") String nombre);
 
     /**
-     * Metodo que recibe un numero institucional y regresa el objeto Usuario
-     * asociado a dicho numero.
+     * Metodo que recibe un numero institucional y regresa la lista de objetos Usuario
+     * asociados a dicho numero.
      * @param num_institucional
-     * @return Usuario
+     * @return List<Usuario>
      */
-    @Query(value = "SELECT * FROM usuarios WHERE num_institucional = :num_institucional", nativeQuery = true)
-    public Usuario getUsuario_numeroInstitucional(@Param("num_institucional") String num_institucional);
+    @Query(value = "SELECT * FROM usuarios WHERE POSITION (:num_institucional IN num_institucional)>0", nativeQuery = true)
+    public List<Usuario> getUsuarios_numeroInstitucional(@Param("num_institucional") String num_institucional);
 
     /**
-     * Metodo que recibe un correo y regresa el objeto Usuario
-     * asociado a dicho correo.
+     * Metodo que recibe un correo y regresa la lista de objetos Usuario
+     * asociados a dicho correo.
      * @param correo
-     * @return Usuario
+     * @return List<Usuario>
      */
-    @Query(value = "SELECT * FROM usuarios WHERE correo = :correo", nativeQuery = true)
-    public Usuario getUsuario_correo(@Param("correo") String correo);
+    @Query(value = "SELECT * FROM usuarios WHERE POSITION (:correo IN correo)>0", nativeQuery = true)
+    public List<Usuario> getUsuarios_correo(@Param("correo") String correo);
 
 }

@@ -16,16 +16,16 @@ public interface SvcUsuario {
     public List<Usuario> getUsuarios_nombre(String nombre);
 
     /*
-     * Metodo que recibe un numero institucional y regresa el objeto Usuario
-     * asociado a dicho numero.
+     * Metodo que recibe un numero institucional y regresa la lista de objetos Usuario
+     * asociados a dicho numero.
      */
-    Usuario getUsuario_numeroInstitucional(String num_institucional);
+    public List<Usuario> getUsuarios_numeroInstitucional(String num_institucional);
     
     /**
-     * Metodo que recibe un correo y regresa el objeto Usuario
-     * asociado a dicho correo.
+     * Metodo que recibe un correo y regresa la lista de objetos Usuario
+     * asociados a dicho correo.
      */
-    Usuario getUsuario_correo(String correo);
+    public List<Usuario> getUsuarios_correo(String correo);
 
     Usuario crearUsuario(Usuario usuario);
 

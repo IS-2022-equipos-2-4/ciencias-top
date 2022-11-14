@@ -48,16 +48,16 @@ public class CtrlUsuario {
     }
 
     /**
-     * Metodo que recibe un numero institucional de usuario y regresa el objeto Usuario
-     * asociado a dicho numero ingresado.
+     * Metodo que recibe un numero institucional de usuario y regresa la lista de objetos Usuario
+     * asociados a dicho numero ingresado.
      * 
      * @param num_institucional
-     * @return ResponseEntity<Usuario>
+     * @return ResponseEntity<List<Usuario>>
      */
     @GetMapping("/usuarios/institucional/{num_institucional}")
-    public ResponseEntity<Usuario> getUsuario_numeroInstitucional(
+    public ResponseEntity<List<Usuario>> getUsuarios_numeroInstitucional(
             @PathVariable(value = "num_institucional") String num_institucional) {
-        Usuario usuario = svcUsuario.getUsuario_numeroInstitucional(num_institucional);
+        List<Usuario> usuario = svcUsuario.getUsuarios_numeroInstitucional(num_institucional);
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
@@ -65,15 +65,15 @@ public class CtrlUsuario {
     }
 
     /**
-     * Metodo que recibe un correo y regresa el objeto Usuario asociado a correo ingresado.
+     * Metodo que recibe un correo y regresa la lista de objetos Usuario asociados a dicho correo ingresado.
      * 
      * @param correo
-     * @return ResponseEntity<Usuario>
+     * @return ResponseEntity<List<Usuario>>
      */
     @GetMapping("/usuario/correo/{correo}")
-    public ResponseEntity<Usuario> getUsuario_correo(
+    public ResponseEntity<List<Usuario>> getUsuarios_correo(
             @PathVariable(value = "correo") String correo) {
-        Usuario usuario = svcUsuario.getUsuario_correo(correo);
+        List<Usuario> usuario = svcUsuario.getUsuarios_correo(correo);
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
