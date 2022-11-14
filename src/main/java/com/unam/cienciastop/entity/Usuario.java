@@ -28,15 +28,15 @@ public class Usuario implements Serializable{
     private String nombre;
 
     @Column(name="correo",unique = true)
-    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.unam.mx$", message = "correo invalido")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.unam.mx$", message = "correo invalido debe tener terminación unam.mx")
     private String correo;
 
     @Column(name="contraseña")
-    @Pattern(regexp = "[A-Za-z0-9._-]*",message = "carcateres invalidos")
+    @Pattern(regexp = "[A-Za-z0-9._-]*",message = "caracteres invalidos, solo se permiten: A-Za-z0-9._-")
     private String contraseña;
 
     @Column(name="num_institucional",length = 9,unique = true)
-    @Pattern(regexp = "[0-9]*", message = "no. de cuenta invalido")
+    @Pattern(regexp = "[0-9]{9}", message = "no. de cuenta invalido, debe ser de longitud 9 y solo números")
     private String numInstitucional;
 
     @Column(name="carrera")
@@ -44,7 +44,7 @@ public class Usuario implements Serializable{
     private String carrera = "No aplica";
 
     @Column(name="telefono",length = 10)
-    @Pattern(regexp = "[0-9]*", message = "telefono invalido")
+    @Pattern(regexp = "[0-9]{10}", message = "telefono invalido")
     private String telefono;
 
     @Column(name="activo",nullable = false)
