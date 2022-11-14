@@ -70,7 +70,7 @@ public class CtrlUsuario {
      * @param correo
      * @return ResponseEntity<List<Usuario>>
      */
-    @GetMapping("/usuario/correo/{correo}")
+    @GetMapping("/usuarios/correo/{correo}")
     public ResponseEntity<List<Usuario>> getUsuarios_correo(
             @PathVariable(value = "correo") String correo) {
         List<Usuario> usuario = svcUsuario.getUsuarios_correo(correo);
