@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.service.SvcUsuario;
+import com.unam.cienciastop.service.SvcUsuarioImpl;
 
 @RestController
 @RequestMapping("/api")
@@ -41,8 +42,7 @@ public class CtrlUsuario {
     }
 
     @PostMapping("/usuarios/edit")
-    public ResponseEntity<Usuario> editarUsuario(
-        @Valid @RequestBody UsuarioDTO usuarioDTO) {
-        return new ResponseEntity<Usuario> editarUsuario(usuarioDTO, HttpStatus.OK);
+    public ResponseEntity<Usuario> editarUsuario(@Valid @RequestBody UsuarioDTO usuarioDTO) {
+        return new ResponseEntity<Usuario> (svcUsuario.editarUsuario(usuarioDTO), HttpStatus.OK);
     }
 }

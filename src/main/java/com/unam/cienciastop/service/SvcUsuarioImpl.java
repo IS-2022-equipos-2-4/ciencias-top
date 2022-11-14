@@ -23,12 +23,9 @@ public class SvcUsuarioImpl implements SvcUsuario{
 
     @Override
     public Usuario editarUsuario(UsuarioDTO usuarioDto) {
-        if (repoUsuario.findById(usuarioDto.getIdAdmin()) != null &&
-            repoUsuario.findById(usuarioDto.getIdAdmin()).getEsAdmin())
-            repoUsuario.editarUsuario(usuarioDto.getId(), usuarioDto.getNombre(), 
-            usuarioDto.getCorreo(), usuarioDto.getTelefono(), usuarioDto.getEsProveedor(), 
-            usuarioDto.getEsAdmin());
-        //else 
-            //ERROR
+        repoUsuario.editarUsuario(usuarioDto.getId(), usuarioDto.getNombre(), 
+        usuarioDto.getCorreo(), usuarioDto.getTelefono(), usuarioDto.getEsProveedor(), 
+        usuarioDto.getEsAdmin());
+        return repoUsuario.findById(usuarioDto.getId()).get();
     }
 }
