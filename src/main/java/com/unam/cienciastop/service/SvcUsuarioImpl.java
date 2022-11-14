@@ -16,13 +16,9 @@ public class SvcUsuarioImpl implements SvcUsuario{
     @Autowired
     private DaoUsuario repoUsuario;
 
-    @Autowired
-    private SvcUsuario svcUsuario;
-
 
     @Override
     public List<Usuario> getUsuariosActivos() {
-        // TODO Auto-generated method stub
         return repoUsuario.getUsuariosActivos();
     }
 
