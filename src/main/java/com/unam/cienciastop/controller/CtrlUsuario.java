@@ -37,7 +37,7 @@ public class CtrlUsuario {
      * @param nombre
      * @return ResponseEntity<List<Usuario>>
      */
-    @GetMapping("/usuario/nombre/{nombre}")
+    @GetMapping("/usuarios/nombre/{nombre}")
     public ResponseEntity<List<Usuario>> getUsuarios_nombre(
             @PathVariable(value = "nombre") String nombre) {
         List<Usuario> usuario = svcUsuario.getUsuarios_nombre(nombre);
@@ -54,7 +54,7 @@ public class CtrlUsuario {
      * @param num_institucional
      * @return ResponseEntity<Usuario>
      */
-    @GetMapping("/usuario/{num_institucional}")
+    @GetMapping("/usuarios/institucional/{num_institucional}")
     public ResponseEntity<Usuario> getUsuario_numeroInstitucional(
             @PathVariable(value = "num_institucional") String num_institucional) {
         Usuario usuario = svcUsuario.getUsuario_numeroInstitucional(num_institucional);
@@ -70,7 +70,7 @@ public class CtrlUsuario {
      * @param correo
      * @return ResponseEntity<Usuario>
      */
-    @GetMapping("/usuario/{correo}")
+    @GetMapping("/usuario/correo/{correo}")
     public ResponseEntity<Usuario> getUsuario_correo(
             @PathVariable(value = "correo") String correo) {
         Usuario usuario = svcUsuario.getUsuario_correo(correo);

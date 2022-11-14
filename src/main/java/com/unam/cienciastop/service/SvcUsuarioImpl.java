@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.entity.Usuario;
 
-import net.bytebuddy.asm.Advice.Return;
-
 @Service
 public class SvcUsuarioImpl implements SvcUsuario{
 
