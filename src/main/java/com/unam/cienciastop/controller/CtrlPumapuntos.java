@@ -26,7 +26,7 @@ public class CtrlPumapuntos {
      * @return
      */
     @GetMapping("/pumapuntos/{id_usuario}")
-    public ResponseEntity<Integer> getPumapuntos(@PathVariable Integer idUsuario) {                
+    public ResponseEntity<Integer> getPumapuntos(@PathVariable(value = "id_usuario") Integer idUsuario) {                
         return new ResponseEntity<Integer>(svcPuma.getPumapuntos(idUsuario),HttpStatus.OK);
     }
 
@@ -37,8 +37,8 @@ public class CtrlPumapuntos {
      */
     @PostMapping("/pumapuntos/{id_usuario}/sumar/{cantidad}")
     public ResponseEntity<Boolean> sumarPumapuntos(
-        @PathVariable Integer idUsuario,
-        @PathVariable Integer cantidad) {
+        @PathVariable(value = "id_usuario") Integer idUsuario,
+        @PathVariable(value = "cantidad") Integer cantidad) {
         return new ResponseEntity<Boolean>(svcPuma.sumarPumapuntos(idUsuario, cantidad), HttpStatus.OK);        
     }
 }
