@@ -15,13 +15,24 @@ public class SvcPumapuntosImpl implements SvcPumapuntos{
     private DaoPumapuntos repoPuma;
 
     @Override
-    public Pumapuntos getPumapuntos(Integer idUsuario) {
+    public Integer getPumapuntos(Integer idUsuario) {
         try {
-            return repoPuma.findById(idUsuario).get();
+            return repoPuma.findById(idUsuario).get().getSaldo();
         } catch (DataAccessException e){
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
+    }
+
+    
+    @Override
+    public Boolean sumarPumapuntos(Integer idUsuario, Integer cantidad){               
+        Pumapuntos pumaPuntos = repoPuma.findById(idUsuario).get();
+        int saldo = pumaPuntos.getSaldo();
+        saldo += cantidad;
+        pumaPuntos.setSaldo(saldo);
+        repoPuma.save(pumaPuntos);
+        return true; 
     }
 }
