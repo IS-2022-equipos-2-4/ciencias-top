@@ -46,7 +46,7 @@ public class CtrlProducto {
         if (producto != null)
             return new ResponseEntity<>(producto, HttpStatus.OK);
         else
-            return new ResponseEntity<>(producto, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"no existe un producto con ese id");
     }
 
     /**
@@ -62,7 +62,7 @@ public class CtrlProducto {
         if (producto != null)
             return new ResponseEntity<>(producto, HttpStatus.OK);
         else
-            return new ResponseEntity<>(producto, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron productos");
     }
 
     /**
@@ -78,7 +78,7 @@ public class CtrlProducto {
         if (producto != null)
             return new ResponseEntity<>(producto, HttpStatus.OK);
         else
-            return new ResponseEntity<>(producto, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron productos");
     }
 
     @PostMapping("/productos/{id_proveedor}")

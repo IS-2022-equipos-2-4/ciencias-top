@@ -46,7 +46,7 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -63,7 +63,7 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -79,7 +79,7 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
 
     @GetMapping("/usuarios/{id_usuario}")
