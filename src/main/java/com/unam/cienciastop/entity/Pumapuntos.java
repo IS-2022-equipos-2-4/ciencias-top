@@ -34,6 +34,8 @@ public class Pumapuntos {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario;
 
+    public Pumapuntos() {}
+
     public Pumapuntos(int mes, int saldo, Usuario usuario) {
         this.mes = mes;
         this.saldo = saldo;
