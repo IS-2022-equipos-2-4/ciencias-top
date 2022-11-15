@@ -28,11 +28,17 @@ public class SvcPumapuntosImpl implements SvcPumapuntos{
     
     @Override
     public Boolean sumarPumapuntos(Integer idUsuario, Integer cantidad){               
-        Pumapuntos pumaPuntos = repoPuma.findById(idUsuario).get();
-        int saldo = pumaPuntos.getSaldo();
-        saldo += cantidad;
-        pumaPuntos.setSaldo(saldo);
-        repoPuma.save(pumaPuntos);
-        return true; 
+        try{
+            Pumapuntos pumaPuntos = repoPuma.findById(idUsuario).get();
+            int saldo = pumaPuntos.getSaldo();
+            saldo += cantidad;
+            pumaPuntos.setSaldo(saldo);
+            repoPuma.save(pumaPuntos);
+            return true; 
+        } catch (DataAccessException e){
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
     }
 }
