@@ -1,5 +1,6 @@
 package com.unam.cienciastop.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,7 @@ public class SvcUsuarioImpl implements SvcUsuario{
     public Usuario crearUsuario(Usuario usuario){
         
         Usuario nuevo = (Usuario) repoUsuario.save(usuario);
-        Pumapuntos registro = new Pumapuntos(11, 100, usuario);
+        Pumapuntos registro = new Pumapuntos(LocalDate.now().getMonthValue(), 100, usuario);
         repoPumapuntos.save(registro);
         return nuevo;
     }
