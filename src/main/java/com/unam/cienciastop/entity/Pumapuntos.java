@@ -2,6 +2,8 @@ package com.unam.cienciastop.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
@@ -32,6 +34,12 @@ public class Pumapuntos {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Usuario usuario;
 
+    public Pumapuntos(int mes, int saldo, Usuario usuario) {
+        this.mes = mes;
+        this.saldo = saldo;
+        this.usuario = usuario;
+    }
+    
     public Integer getIdPumapuntos() {
         return idPumapuntos;
     }
