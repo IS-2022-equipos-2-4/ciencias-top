@@ -38,8 +38,7 @@ public class Usuario implements Serializable{
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.unam.mx$", message = "correo invalido debe tener terminación unam.mx")
     private String correo;
 
-    @Column(name="contraseña")
-    @Pattern(regexp = "[A-Za-z0-9._-]*",message = "caracteres invalidos, solo se permiten: A-Za-z0-9._-")
+    @Column(name="contraseña", nullable = false)
     private String contraseña;
 
     @Column(name="num_institucional",length = 9,unique = true)

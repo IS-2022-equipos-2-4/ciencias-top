@@ -1,6 +1,7 @@
 package com.unam.cienciastop.service;
 
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,9 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoPumapuntos;
+import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Pumapuntos;
+import com.unam.cienciastop.entity.Role;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 
@@ -33,14 +36,16 @@ import org.slf4j.LoggerFactory;
 public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
     private Logger logger = LoggerFactory.getLogger(SvcUsuarioImpl.class);
-
-    private BCryptPasswordEncoder passEncoder;
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
     private DaoUsuario repoUsuario;
 
     @Autowired
     private DaoPumapuntos repoPumapuntos;
+
+    @Autowired
+    private DaoRoles repoRoles;
 
     @Override
     public List<Usuario> getUsuariosActivos() {
@@ -105,9 +110,25 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     @Override
     public Usuario crearUsuario(Usuario usuario) {
         try {
-            usuario.setContraseña(passEncoder.encode(usuario.getContraseña()));
+
+            // encriptar la contraseña
+            usuario.setContraseña(passwordEncoder.encode(usuario.getContraseña()));
+
+            // asignación de roles
+            List<Role> roles = new LinkedList<>();
+            roles.add(repoRoles.findById(2L).get()); // agregamos rol de user por default
+
+            if (usuario.getEsAdmin())
+                roles.add(repoRoles.findById(1L).get());
+            if (usuario.getEsProveedor())
+                roles.add(repoRoles.findById(3L).get());
+
+            usuario.setRoles(roles);
+
+            // guardamos usuario y creamos registro de pumapuntos
             Usuario nuevo = (Usuario) repoUsuario.save(usuario);
             Pumapuntos registro = new Pumapuntos(LocalDate.now().getMonthValue(), 100, usuario);
+
             repoPumapuntos.save(registro);
             return nuevo;
         } catch (DataIntegrityViolationException e) {
@@ -115,7 +136,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
                     "error, ya hay un usuario registrado con ese correo o no. cuenta / trabajador");
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "error en la consulta a la base de datos");
+                    e.getLocalizedMessage());
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
@@ -147,7 +168,6 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
         
-
         return usuario;
     }
 
