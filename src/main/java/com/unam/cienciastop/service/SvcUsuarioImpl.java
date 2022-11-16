@@ -22,7 +22,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.slf4j.Logger;
@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
     private Logger logger = LoggerFactory.getLogger(SvcUsuarioImpl.class);
+
+    private BCryptPasswordEncoder passEncoder;
 
     @Autowired
     private DaoUsuario repoUsuario;
@@ -101,6 +103,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     @Override
     public Usuario crearUsuario(Usuario usuario){
         try {
+            usuario.setContraseña(passEncoder.encode(usuario.getContraseña()));
             Usuario nuevo = (Usuario) repoUsuario.save(usuario);
             Pumapuntos registro = new Pumapuntos(LocalDate.now().getMonthValue(), 100, usuario);
             repoPumapuntos.save(registro);
