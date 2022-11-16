@@ -21,14 +21,24 @@ public class CtrlPumapuntos {
     @Autowired
     private SvcPumapuntos svcPuma;
 
+    /**
+     * @param idUsuario
+     * @return
+     */
     @GetMapping("/pumapuntos/{id_usuario}")
-    public ResponseEntity<Pumapuntos> getPumapuntos(@PathVariable Integer idUsuario) {
-        return new ResponseEntity<>(svcPuma.getPumapuntos(idUsuario), HttpStatus.OK);
+    public ResponseEntity<Integer> getPumapuntos(@PathVariable(value = "id_usuario") Integer idUsuario) {                
+        return new ResponseEntity<Integer>(svcPuma.getPumapuntos(idUsuario),HttpStatus.OK);
     }
 
+    /**
+     * @param idUsuario
+     * @param cantidad
+     * @return
+     */
     @PostMapping("/pumapuntos/{id_usuario}/sumar/{cantidad}")
-    public ResponseEntity<HttpStatus> sumarPumapuntos(@PathVariable Integer idUsuario,
-            @PathVariable Integer cantidad) {
-        return null;
+    public ResponseEntity<Boolean> sumarPumapuntos(
+        @PathVariable(value = "id_usuario") Integer idUsuario,
+        @PathVariable(value = "cantidad") Integer cantidad) {
+        return new ResponseEntity<Boolean>(svcPuma.sumarPumapuntos(idUsuario, cantidad), HttpStatus.OK);        
     }
 }

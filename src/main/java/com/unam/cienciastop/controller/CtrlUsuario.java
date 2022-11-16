@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
+import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcUsuario;
 import com.unam.cienciastop.service.SvcUsuarioImpl;
 
@@ -46,7 +48,7 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -63,7 +65,7 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -79,7 +81,7 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            return new ResponseEntity<>(usuario, HttpStatus.NO_CONTENT);
+            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
 
     @GetMapping("/usuarios/{id_usuario}")
@@ -89,7 +91,10 @@ public class CtrlUsuario {
     }
 
     @PostMapping("/usuarios")
-    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario, BindingResult bindingResult){
+        if(bindingResult.hasErrors()) {
+			throw new ApiException(HttpStatus.BAD_REQUEST,bindingResult.getAllErrors().get(0).getDefaultMessage());
+		}
         return new ResponseEntity<>(svcUsuario.crearUsuario(usuario),HttpStatus.OK);
     }
 

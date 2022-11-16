@@ -3,6 +3,9 @@ package com.unam.cienciastop.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoUsuario;
@@ -10,6 +13,7 @@ import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Usuario;
+import com.unam.cienciastop.exceptionHandler.ApiException;
 
 @Service
 public class SvcProductoImpl implements SvcProducto {
@@ -28,8 +32,13 @@ public class SvcProductoImpl implements SvcProducto {
 
     @Override
     public List<Producto> getProductos() {
-        // TODO Auto-generated method stub
-        return (List<Producto>) repoProducto.findAll();
+        try {
+            return (List<Producto>) repoProducto.findAll();
+        } catch (DataAccessException e){
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
     }
 
     /*
@@ -38,7 +47,13 @@ public class SvcProductoImpl implements SvcProducto {
      */
     @Override
     public Producto getProducto_id(int id){
-        return repoProducto.getProducto_id(id);
+        try {
+            return repoProducto.getProducto_id(id);    
+        } catch (DataAccessException e){
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
     }
 
     /*
@@ -47,7 +62,13 @@ public class SvcProductoImpl implements SvcProducto {
      */
     @Override
     public List<Producto> getProductos_codigo(String codigo){
-        return repoProducto.getProductos_codigo(codigo);
+        try {
+            return repoProducto.getProductos_codigo(codigo);    
+        } catch (DataAccessException e){
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
     }
 
     /**
@@ -58,20 +79,34 @@ public class SvcProductoImpl implements SvcProducto {
      */
     @Override
     public List<Producto> getProductos_nombre(String nombre){
-        return repoProducto.getProductos_nombre(nombre);
+        try {
+            return repoProducto.getProductos_nombre(nombre);
+        } catch (DataAccessException e){
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
     }
 
     
     @Override
     public Producto crearProducto(Producto producto, Integer idProveedor) {
-        Usuario proveedor = (Usuario) repoUsuario.findById(idProveedor).get();
-        producto.setProveedor(proveedor);
-        Producto nuevo = (Producto) repoProducto.save(producto);
-        Integer unidades = producto.getStock();
-        for (int i = 0; i < unidades; i++) {
-            EjemplarProducto e = new EjemplarProducto(true, nuevo);
-            svcEProducto.crearEjemplar(e);
+        try {
+            Usuario proveedor = (Usuario) repoUsuario.findById(idProveedor).get();
+            producto.setProveedor(proveedor);
+            Producto nuevo = (Producto) repoProducto.save(producto);
+            Integer unidades = producto.getStock();
+            for (int i = 0; i < unidades; i++) {
+                EjemplarProducto e = new EjemplarProducto(true, nuevo);
+                svcEProducto.crearEjemplar(e);
+            }
+            return nuevo;
+        } catch (DataIntegrityViolationException e){
+            throw new ApiException(HttpStatus.NOT_FOUND, "ya hay un producto registrado con ese codigo");
+        } catch (DataAccessException e){
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
-        return nuevo;
     }
 }
