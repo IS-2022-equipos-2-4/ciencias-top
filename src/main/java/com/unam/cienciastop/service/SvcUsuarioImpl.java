@@ -118,7 +118,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 	@Transactional(readOnly=true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		Usuario usuario = repoUsuario.findByUsername(username);
+		Usuario usuario = repoUsuario.findByNombre(username);
 		
 		if(usuario == null) {
 			logger.error("Error en el login: no existe el usuario '"+username+"' en el sistema!");
@@ -136,8 +136,8 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
 	@Override
 	@Transactional(readOnly=true)
-	public Usuario findByUsername(String username) {
-		return repoUsuario.findByUsername(username);
+	public Usuario findByNombre(String username) {
+		return repoUsuario.findByNombre(username);
 	}
 
     

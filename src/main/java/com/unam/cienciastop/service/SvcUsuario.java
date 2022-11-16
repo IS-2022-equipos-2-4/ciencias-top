@@ -29,6 +29,6 @@ public interface SvcUsuario {
 
     Usuario crearUsuario(Usuario usuario);
 
-    public Usuario findByUsername(String username);
+    Usuario findByNombre(String username);
 
 }

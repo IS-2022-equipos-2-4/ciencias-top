@@ -87,12 +87,14 @@ public class CtrlUsuario {
         else
             throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
+    
     @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> buscarUsuario(
             @PathVariable(value = "id_usuario") Integer idUsuario) {
         return null;
     }
+
     @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios")
     public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario, BindingResult bindingResult){
@@ -101,6 +103,7 @@ public class CtrlUsuario {
 		}
         return new ResponseEntity<>(svcUsuario.crearUsuario(usuario),HttpStatus.OK);
     }
+
     @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> editarUsuario(
