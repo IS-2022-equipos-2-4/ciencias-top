@@ -119,7 +119,16 @@ public class SvcUsuarioImpl implements SvcUsuario {
             usuario.setEsProveedor(usuarioDto.getEsProveedor());
         if (usuarioDto.getEsAdmin() != null)
             usuario.setEsAdmin(usuarioDto.getEsAdmin());
-        repoUsuario.save(usuario);
+
+        try {
+            repoUsuario.save(usuario);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+        
 
         return usuario;
     }
