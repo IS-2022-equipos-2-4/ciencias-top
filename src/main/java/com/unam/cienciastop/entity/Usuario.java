@@ -9,6 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Pattern;
+import javax.persistence.ManyToMany;
+import java.util.List;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.CascadeType;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.ColumnDefault;
 
@@ -56,6 +63,12 @@ public class Usuario implements Serializable{
 
     @Column(name="esAdmin")
     private Boolean esAdmin;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@JoinTable(name="usuarios_roles", joinColumns= @JoinColumn(name="usuario_id"),
+	inverseJoinColumns=@JoinColumn(name="role_id"),
+	uniqueConstraints= {@UniqueConstraint(columnNames= {"usuario_id", "role_id"})})
+	private List<Role> roles;
 
     public Integer getId() {
         return id;
@@ -136,4 +149,14 @@ public class Usuario implements Serializable{
     public void setEsAdmin(Boolean esAdmin) {
         this.esAdmin = esAdmin;
     }
+
+    public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
+    public List<Role> getRoles() {
+		return roles;
+	}
+
+
 }

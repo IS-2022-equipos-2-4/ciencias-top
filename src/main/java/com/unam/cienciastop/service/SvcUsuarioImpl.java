@@ -2,6 +2,7 @@ package com.unam.cienciastop.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -15,8 +16,22 @@ import com.unam.cienciastop.entity.Pumapuntos;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import org.springframework.transaction.annotation.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @Service
-public class SvcUsuarioImpl implements SvcUsuario{
+public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
+
+    private Logger logger = LoggerFactory.getLogger(SvcUsuarioImpl.class);
 
     @Autowired
     private DaoUsuario repoUsuario;
@@ -98,4 +113,33 @@ public class SvcUsuarioImpl implements SvcUsuario{
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
     }
+
+    @Override
+	@Transactional(readOnly=true)
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+		Usuario usuario = repoUsuario.findByUsername(username);
+		
+		if(usuario == null) {
+			logger.error("Error en el login: no existe el usuario '"+username+"' en el sistema!");
+			throw new UsernameNotFoundException("Error en el login: no existe el usuario '"+username+"' en el sistema!");
+		}
+		
+		List<GrantedAuthority> authorities = usuario.getRoles()
+				.stream()
+				.map(role -> new SimpleGrantedAuthority(role.getNombre()))
+				.peek(authority -> logger.info("Role: " + authority.getAuthority()))
+				.collect(Collectors.toList());
+		
+		return new User(usuario.getNombre(), usuario.getContraseña(), usuario.getActivo(), true, true, true, authorities);
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public Usuario findByUsername(String username) {
+		return repoUsuario.findByUsername(username);
+	}
+
+    
+ 
 }

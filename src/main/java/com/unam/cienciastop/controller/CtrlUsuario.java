@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.annotation.Secured;
+
 
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -28,6 +30,7 @@ public class CtrlUsuario {
     @Autowired
     private SvcUsuario svcUsuario;
 
+    @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> getUsuariosActivos() {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
@@ -39,6 +42,7 @@ public class CtrlUsuario {
      * @param nombre
      * @return ResponseEntity<List<Usuario>>
      */
+    @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios/nombre/{nombre}")
     public ResponseEntity<List<Usuario>> getUsuarios_nombre(
             @PathVariable(value = "nombre") String nombre) {
@@ -56,6 +60,7 @@ public class CtrlUsuario {
      * @param num_institucional
      * @return ResponseEntity<List<Usuario>>
      */
+    @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios/institucional/{num_institucional}")
     public ResponseEntity<List<Usuario>> getUsuarios_numeroInstitucional(
             @PathVariable(value = "num_institucional") String num_institucional) {
@@ -72,6 +77,7 @@ public class CtrlUsuario {
      * @param correo
      * @return ResponseEntity<List<Usuario>>
      */
+    @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios/correo/{correo}")
     public ResponseEntity<List<Usuario>> getUsuarios_correo(
             @PathVariable(value = "correo") String correo) {
@@ -81,13 +87,13 @@ public class CtrlUsuario {
         else
             throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
     }
-
+    @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> buscarUsuario(
             @PathVariable(value = "id_usuario") Integer idUsuario) {
         return null;
     }
-
+    @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios")
     public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario, BindingResult bindingResult){
         if(bindingResult.hasErrors()) {
@@ -95,7 +101,7 @@ public class CtrlUsuario {
 		}
         return new ResponseEntity<>(svcUsuario.crearUsuario(usuario),HttpStatus.OK);
     }
-
+    @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> editarUsuario(
             @PathVariable(value = "id_usuario") Integer idUsuario,

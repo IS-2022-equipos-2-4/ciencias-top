@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.annotation.Secured;
 
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -28,6 +29,7 @@ public class CtrlProducto {
     @Autowired
     private SvcProducto svcProducto;
 
+    @Secured({"ROLE_ADMIN","ROLE_USER", "ROLE_PROVIDER"})
     @GetMapping("/productos")
     public ResponseEntity<List<Producto>> getProductos() {
         return new ResponseEntity<>(svcProducto.getProductos(), HttpStatus.OK);
@@ -39,6 +41,8 @@ public class CtrlProducto {
      * @param idProducto
      * @return ResponseEntity<Producto>
      */
+    
+    @Secured({"ROLE_ADMIN","ROLE_PROVIDER"})
     @GetMapping("/productos/{id_producto}")
     public ResponseEntity<Producto> getProducto_id(
             @PathVariable(value = "id_producto") Integer idProducto) {
@@ -55,6 +59,7 @@ public class CtrlProducto {
      * @param codigo
      * @return ResponseEntity<List<Producto>>
      */
+    @Secured({"ROLE_ADMIN","ROLE_USER", "ROLE_PROVIDER"}) 
     @GetMapping("/productos/codigo/{codigo}")
     public ResponseEntity<List<Producto>> getProductos_codigo(
             @PathVariable(value = "codigo") String codigo) {
@@ -71,6 +76,7 @@ public class CtrlProducto {
      * @param nombre
      * @return ResponseEntity<List<Producto>>
      */
+    @Secured({"ROLE_ADMIN","ROLE_USER", "ROLE_PROVIDER"})
     @GetMapping("/productos/nombre/{nombre}")
     public ResponseEntity<List<Producto>> getProductos_nombre(
             @PathVariable(value = "nombre") String nombre) {
@@ -80,7 +86,7 @@ public class CtrlProducto {
         else
             throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron productos");
     }
-
+    @Secured({"ROLE_ADMIN","ROLE_PROVIDER"})
     @PostMapping("/productos/{id_proveedor}")
     public ResponseEntity<Producto> crearProducto(@Valid @RequestBody Producto producto,
             BindingResult bindingResult,

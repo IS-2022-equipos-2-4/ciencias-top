@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.annotation.Secured;
 
 import com.unam.cienciastop.entity.Pumapuntos;
 import com.unam.cienciastop.service.SvcPumapuntos;
@@ -25,6 +26,7 @@ public class CtrlPumapuntos {
      * @param idUsuario
      * @return
      */
+    @Secured({"ROLE_ADMIN","ROLE_USER", "ROLE_PROVIDER"})
     @GetMapping("/pumapuntos/{id_usuario}")
     public ResponseEntity<Integer> getPumapuntos(@PathVariable(value = "id_usuario") Integer idUsuario) {                
         return new ResponseEntity<Integer>(svcPuma.getPumapuntos(idUsuario),HttpStatus.OK);
@@ -35,6 +37,7 @@ public class CtrlPumapuntos {
      * @param cantidad
      * @return
      */
+    @Secured("ROLE_ADMIN")
     @PostMapping("/pumapuntos/{id_usuario}/sumar/{cantidad}")
     public ResponseEntity<Boolean> sumarPumapuntos(
         @PathVariable(value = "id_usuario") Integer idUsuario,
