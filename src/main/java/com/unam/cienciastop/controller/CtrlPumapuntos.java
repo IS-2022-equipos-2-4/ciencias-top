@@ -26,7 +26,7 @@ public class CtrlPumapuntos {
      * @param idUsuario
      * @return
      */
-    @Secured({"ROLE_ADMIN","ROLE_USER", "ROLE_PROVIDER"})
+    @Secured({"ROLE_ADMIN","ROLE_USER"})
     @GetMapping("/pumapuntos/{id_usuario}")
     public ResponseEntity<Integer> getPumapuntos(@PathVariable(value = "id_usuario") Integer idUsuario) {                
         return new ResponseEntity<Integer>(svcPuma.getPumapuntos(idUsuario),HttpStatus.OK);
