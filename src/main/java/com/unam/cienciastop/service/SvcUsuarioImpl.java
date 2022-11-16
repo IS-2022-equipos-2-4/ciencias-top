@@ -104,15 +104,21 @@ public class SvcUsuarioImpl implements SvcUsuario {
     }
 
     @Override
-    public Usuario editarUsuario(UsuarioDTO usuarioDto) {
-        Usuario usuario = repoUsuario.findById(usuarioDto.getId())
+    public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDto) {
+        Usuario usuario = repoUsuario.findById(id_usuario)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
                         "error, no se puede modificar un usuario inexistente."));
-        usuario.setNombre(usuarioDto.getNombre());
-        usuario.setCorreo(usuarioDto.getCorreo());
-        usuario.setTelefono(usuarioDto.getTelefono());
-        usuario.setEsProveedor(usuarioDto.getEsProveedor());
-        usuario.setEsAdmin(usuarioDto.getEsAdmin());
+
+        if (usuarioDto.getNombre() != null)
+            usuario.setNombre(usuarioDto.getNombre());
+        if (usuarioDto.getCorreo() != null)
+            usuario.setCorreo(usuarioDto.getCorreo());
+        if (usuarioDto.getTelefono() != null)
+            usuario.setTelefono(usuarioDto.getTelefono());
+        if (usuarioDto.getEsProveedor() != null)
+            usuario.setEsProveedor(usuarioDto.getEsProveedor());
+        if (usuarioDto.getEsAdmin() != null)
+            usuario.setEsAdmin(usuarioDto.getEsAdmin());
         repoUsuario.save(usuario);
 
         return usuario;
