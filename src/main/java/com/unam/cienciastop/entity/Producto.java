@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.OnDelete;
@@ -33,18 +35,25 @@ public class Producto implements Serializable {
     @Pattern(regexp = "[A-Z0-9]{12}", message = "el codigo debe tener 12 caracteres y solo pueden ser mayusculas y numeros")
     private String codigo;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", nullable = false)
     private String nombre;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
     @Column(name = "costo", nullable = false)
+    @Min(value = 0, message = "el costo no puede ser negativo")
     private Integer costo;
 
     // cantidad de productos disponibles para rentar
-    @Column(name = "stock")
+    @Column(name = "stock", nullable = false)
+    @Min(value = 1, message = "el minimo de stock es 1")
     private Integer stock;
+
+    @Column(name = "limite_prestamo", nullable = false)
+    @Min(value = 3, message = "el limite de prestamo debe ser un valor entre 3 y 7")
+    @Max(value = 7, message = "el limite de prestamo debe ser un valor entre 3 y 7")
+    private Integer limitePrestamo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_proveedor", referencedColumnName = "id_usuario", nullable = false)
@@ -105,5 +114,13 @@ public class Producto implements Serializable {
 
     public void setCosto(Integer costo) {
         this.costo = costo;
+    }
+
+    public Integer getLimitePrestamo() {
+        return limitePrestamo;
+    }
+
+    public void setLimitePrestamo(Integer limitePrestamo) {
+        this.limitePrestamo = limitePrestamo;
     }
 }
