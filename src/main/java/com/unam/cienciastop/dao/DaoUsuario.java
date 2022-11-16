@@ -2,6 +2,7 @@ package com.unam.cienciastop.dao;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -9,12 +10,12 @@ import org.springframework.data.repository.query.Param;
 import com.unam.cienciastop.entity.Usuario;
 
 public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
-    
+
     @Query(value = "SELECT * FROM usuarios WHERE activo = true", nativeQuery = true)
     public List<Usuario> getUsuariosActivos();
 
-    /** 
-     * Metodo que recibe un nombre y regresa la lista de objetos 
+    /**
+     * Metodo que recibe un nombre y regresa la lista de objetos
      * Usuario asociado a dicho nombre.
      * @param nombre
      * @return List<Usuario>

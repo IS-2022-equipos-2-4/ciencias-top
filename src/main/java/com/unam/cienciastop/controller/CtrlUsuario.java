@@ -12,15 +12,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 
 
+import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcUsuario;
+import com.unam.cienciastop.service.SvcUsuarioImpl;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -50,7 +53,8 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -68,11 +72,13 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron usuarios");
     }
 
     /**
-     * Metodo que recibe un correo y regresa la lista de objetos Usuario asociados a dicho correo ingresado.
+     * Metodo que recibe un correo y regresa la lista de objetos Usuario asociados a dicho correo
+     * ingresado.
      * 
      * @param correo
      * @return ResponseEntity<List<Usuario>>
@@ -85,7 +91,8 @@ public class CtrlUsuario {
         if (usuario != null)
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
-            throw new ApiException(HttpStatus.NOT_FOUND,"ocurrio un error, no se econtraron usuarios");
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron usuarios");
     }
     
     @Secured("ROLE_ADMIN")
@@ -97,18 +104,20 @@ public class CtrlUsuario {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios")
-    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario, BindingResult bindingResult){
-        if(bindingResult.hasErrors()) {
-			throw new ApiException(HttpStatus.BAD_REQUEST,bindingResult.getAllErrors().get(0).getDefaultMessage());
-		}
-        return new ResponseEntity<>(svcUsuario.crearUsuario(usuario),HttpStatus.OK);
+    public ResponseEntity<Usuario> crearUsuario(@Valid @RequestBody Usuario usuario,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST,
+                    bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+        return new ResponseEntity<>(svcUsuario.crearUsuario(usuario), HttpStatus.OK);
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> editarUsuario(
-            @PathVariable(value = "id_usuario") Integer idUsuario,
-            @Valid @RequestBody Usuario usuario) {
-        return null;
+            @PathVariable(value = "id_usuario") Integer id_usuario,
+            @Valid @RequestBody UsuarioDTO usuarioDTO) {
+        return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO), HttpStatus.OK);
     }
 }
