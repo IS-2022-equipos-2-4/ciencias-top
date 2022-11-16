@@ -28,8 +28,8 @@ public class SvcUsuarioImpl implements SvcUsuario {
     @Override
     public List<Usuario> getUsuariosActivos() {
         try {
-            return repoUsuario.getUsuariosActivos();    
-        } catch (DataAccessException e){
+            return repoUsuario.getUsuariosActivos();
+        } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
@@ -37,64 +37,67 @@ public class SvcUsuarioImpl implements SvcUsuario {
     }
 
     /*
-     * Metodo que recibe un nombre y regresa la lista de objetos 
-     * Usuario asociado a dicho nombre.
+     * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.
      */
     @Override
-    public List<Usuario> getUsuarios_nombre(String nombre){
+    public List<Usuario> getUsuarios_nombre(String nombre) {
         try {
-            return repoUsuario.getUsuarios_nombre(nombre);   
-        } catch (DataAccessException e){
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+            return repoUsuario.getUsuarios_nombre(nombre);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
     }
 
     /*
-     * Metodo que recibe un numero institucional y regresa la lista de objetos Usuario
-     * asociados a dicho numero.
+     * Metodo que recibe un numero institucional y regresa la lista de objetos Usuario asociados a
+     * dicho numero.
      */
     @Override
-    public List<Usuario> getUsuarios_numeroInstitucional(String num_institucional){
+    public List<Usuario> getUsuarios_numeroInstitucional(String num_institucional) {
         try {
             return repoUsuario.getUsuarios_numeroInstitucional(num_institucional);
-        } catch (DataAccessException e){
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
     }
 
     /*
-     * Metodo que recibe correo y regresa la lista de objetos Usuario
-     * asociados a dicho correo.
+     * Metodo que recibe correo y regresa la lista de objetos Usuario asociados a dicho correo.
      */
     @Override
-    public List<Usuario> getUsuarios_correo(String correo){
+    public List<Usuario> getUsuarios_correo(String correo) {
         try {
-            return repoUsuario.getUsuarios_correo(correo);    
-        } catch (DataAccessException e){
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+            return repoUsuario.getUsuarios_correo(correo);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
-        } 
+        }
     }
+
     /*
-     * Metodo que recibe informacion de un usuario nuevo y lo crea
-     * en la base de datos
+     * Metodo que recibe informacion de un usuario nuevo y lo crea en la base de datos
      */
     @Override
-    public Usuario crearUsuario(Usuario usuario){
+    public Usuario crearUsuario(Usuario usuario) {
         try {
             Usuario nuevo = (Usuario) repoUsuario.save(usuario);
             Pumapuntos registro = new Pumapuntos(LocalDate.now().getMonthValue(), 100, usuario);
             repoPumapuntos.save(registro);
             return nuevo;
-        } catch (DataIntegrityViolationException e){
-            throw new ApiException(HttpStatus.NOT_FOUND, "error, ya hay un usuario registrado con ese correo o no. cuenta / trabajador");
-        } catch (DataAccessException e){
-            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "error en la consulta a la base de datos");
+        } catch (DataIntegrityViolationException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "error, ya hay un usuario registrado con ese correo o no. cuenta / trabajador");
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
@@ -102,13 +105,16 @@ public class SvcUsuarioImpl implements SvcUsuario {
 
     @Override
     public Usuario editarUsuario(UsuarioDTO usuarioDto) {
-        Usuario usuario = repoUsuario.getUsuario_id(usuarioDto.getId());
+        Usuario usuario = repoUsuario.findById(usuarioDto.getId())
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                        "error, no se puede modificar un usuario inexistente."));
         usuario.setNombre(usuarioDto.getNombre());
         usuario.setCorreo(usuarioDto.getCorreo());
         usuario.setTelefono(usuarioDto.getTelefono());
         usuario.setEsProveedor(usuarioDto.getEsProveedor());
         usuario.setEsAdmin(usuarioDto.getEsAdmin());
         repoUsuario.save(usuario);
+
         return usuario;
     }
 }
