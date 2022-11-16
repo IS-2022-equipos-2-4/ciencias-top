@@ -56,9 +56,13 @@ public class SvcUsuarioImpl implements SvcUsuario {
 
     @Override
     public Usuario editarUsuario(UsuarioDTO usuarioDto) {
-        repoUsuario.editarUsuario(usuarioDto.getId(), usuarioDto.getNombre(),
-                                  usuarioDto.getCorreo(), usuarioDto.getTelefono(),
-                                  usuarioDto.getEsProveedor(), usuarioDto.getEsAdmin());
-        return repoUsuario.findById(usuarioDto.getId()).get();
+        Usuario usuario = repoUsuario.getUsuario_id(usuarioDto.getId());
+        usuario.setNombre(usuarioDto.getNombre());
+        usuario.setCorreo(usuarioDto.getCorreo());
+        usuario.setTelefono(usuarioDto.getTelefono());
+        usuario.setEsProveedor(usuarioDto.getEsProveedor());
+        usuario.setEsAdmin(usuarioDto.getEsAdmin());
+        repoUsuario.save(usuario);
+        return usuario;
     }
 }

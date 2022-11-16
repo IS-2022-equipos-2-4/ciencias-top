@@ -1,21 +1,12 @@
 package com.unam.cienciastop.dto;
 
 public class UsuarioDTO {
-    private Integer idAdmin;
     private Integer id;
     private String nombre;
     private String correo;
     private String telefono;
     private Boolean esProveedor;
     private Boolean esAdmin;
-
-    public Integer getIdAdmin() {
-        return this.idAdmin;
-    }
-
-    public void setIdAdmin(Integer idAdmin) {
-        this.idAdmin = idAdmin;
-    }
 
     public Integer getId() {
         return this.id;
