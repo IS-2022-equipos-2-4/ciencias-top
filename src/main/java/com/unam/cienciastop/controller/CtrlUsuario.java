@@ -92,7 +92,7 @@ public class CtrlUsuario {
     @GetMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> buscarUsuario(
             @PathVariable(value = "id_usuario") Integer idUsuario) {
-        return null;
+        return new ResponseEntity<>(svcUsuario.getUsuario_id(idUsuario), HttpStatus.OK);
     }
 
     @PostMapping("/usuarios")
@@ -105,10 +105,11 @@ public class CtrlUsuario {
         return new ResponseEntity<>(svcUsuario.crearUsuario(usuario), HttpStatus.OK);
     }
 
-    @PatchMapping("/usuarios/{id_usuario}")
+    @PatchMapping("/us uarios/{id_usuario}")
     public ResponseEntity<Usuario> editarUsuario(
             @PathVariable(value = "id_usuario") Integer id_usuario,
             @Valid @RequestBody UsuarioDTO usuarioDTO) {
-        return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO), HttpStatus.OK);
+        return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),
+                HttpStatus.OK);
     }
 }

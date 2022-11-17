@@ -128,8 +128,15 @@ public class SvcUsuarioImpl implements SvcUsuario {
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
-        
+
 
         return usuario;
     }
+
+    @Override
+    public Usuario getUsuario_id(Integer id_usuario) {
+        return repoUsuario.findById(id_usuario)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                        "error, no se puede obtener un usuario inexistente."));
+    };
 }
