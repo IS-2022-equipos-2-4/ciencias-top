@@ -28,7 +28,7 @@ public interface SvcUsuario {
 
     Usuario crearUsuario(Usuario usuario);
 
-    Usuario findByNombre(String username);
+    Usuario findByNumInstitucional(String username);
 
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDTO);
 }

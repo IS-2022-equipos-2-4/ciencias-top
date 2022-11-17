@@ -41,5 +41,5 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     @Query(value = "SELECT * FROM usuarios WHERE POSITION (:correo IN correo)>0", nativeQuery = true)
     public List<Usuario> getUsuarios_correo(@Param("correo") String correo);
 
-    public Usuario findByNombre(String username);
+    Usuario findByNumInstitucional(String numInstitucional);
 }

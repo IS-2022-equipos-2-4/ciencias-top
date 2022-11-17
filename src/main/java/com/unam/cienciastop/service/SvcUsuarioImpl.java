@@ -175,7 +175,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 	@Transactional(readOnly=true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
-		Usuario usuario = repoUsuario.findByNombre(username);
+		Usuario usuario = repoUsuario.findByNumInstitucional(username);
 		
 		if(usuario == null) {
 			logger.error("Error en el login: no existe el usuario '"+username+"' en el sistema!");
@@ -188,12 +188,12 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 				.peek(authority -> logger.info("Role: " + authority.getAuthority()))
 				.collect(Collectors.toList());
 		
-		return new User(usuario.getNombre(), usuario.getContraseña(), usuario.getActivo(), true, true, true, authorities);
+		return new User(usuario.getNumInstitucional(), usuario.getContraseña(), usuario.getActivo(), true, true, true, authorities);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
-	public Usuario findByNombre(String username) {
-		return repoUsuario.findByNombre(username);
+	public Usuario findByNumInstitucional(String username) {
+		return repoUsuario.findByNumInstitucional(username);
 	}
 }
