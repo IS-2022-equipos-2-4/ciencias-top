@@ -14,10 +14,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.lang.NonNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -33,26 +35,32 @@ public class Producto implements Serializable {
 
     @Column(name = "codigo", nullable = false, length = 12, unique = true)
     @Pattern(regexp = "[A-Z0-9]{12}", message = "el codigo debe tener 12 caracteres y solo pueden ser mayusculas y numeros")
+    @NotNull(message = "No ingresaste el codigo del producto")
     private String codigo;
 
     @Column(name = "nombre", nullable = false)
+    @NotNull(message = "No ingresaste el nombre del producto")
     private String nombre;
 
     @Column(name = "descripcion", nullable = false)
+    @NotNull(message = "No ingresaste la descripción")
     private String descripcion;
 
     @Column(name = "costo", nullable = false)
     @Min(value = 0, message = "el costo no puede ser negativo")
+    @NotNull(message = "No ingresaste el costo")
     private Integer costo;
 
     // cantidad de productos disponibles para rentar
     @Column(name = "stock", nullable = false)
     @Min(value = 1, message = "el minimo de stock es 1")
+    @NotNull(message = "No ingresaste el número de stock del producto")
     private Integer stock;
 
     @Column(name = "limite_prestamo", nullable = false)
     @Min(value = 3, message = "el limite de prestamo debe ser un valor entre 3 y 7")
     @Max(value = 7, message = "el limite de prestamo debe ser un valor entre 3 y 7")
+    @NotNull(message = "No estableciste el limite de dias de prestamo")
     private Integer limitePrestamo;
 
     @ManyToOne(fetch = FetchType.LAZY)

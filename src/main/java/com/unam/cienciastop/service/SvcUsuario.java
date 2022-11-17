@@ -31,4 +31,6 @@ public interface SvcUsuario {
     Usuario findByNumInstitucional(String username);
 
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDTO);
+
+    public Usuario getUsuario_id(Integer id);
 }

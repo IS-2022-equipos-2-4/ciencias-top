@@ -58,6 +58,12 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         }
     }
 
+    public Usuario getUsuario_id(Integer id_usuario) {
+        return repoUsuario.findById(id_usuario)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                        "error, no se puede obtener un usuario inexistente."));
+    };
+
     /*
      * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.
      */
