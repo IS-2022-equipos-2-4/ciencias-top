@@ -13,6 +13,7 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @Entity
@@ -31,13 +32,14 @@ public class Usuario implements Serializable{
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.unam.mx$", message = "correo invalido debe tener terminación unam.mx")
     private String correo;
 
+    @JsonProperty("contrasena")
     @Column(name="contraseña",nullable = false)
     private String contraseña;
 
     @Column(name="num_institucional",length = 9,unique = true,nullable = false)
     @Pattern(regexp = "[0-9]{9}", message = "no. de cuenta invalido, debe ser de longitud 9 y solo números")
     private String numInstitucional;
-
+    
     @Column(name="carrera")
     @ColumnDefault(value = "'No aplica'")
     private String carrera = "No aplica";
