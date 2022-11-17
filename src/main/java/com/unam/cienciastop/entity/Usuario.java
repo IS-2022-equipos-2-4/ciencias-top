@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.ColumnDefault;
@@ -26,26 +27,31 @@ public class Usuario implements Serializable{
     private Integer id; 
 
     @Column(name="nombre",length = 50,nullable = false)
+    @NotNull(message = "No pusiste nombre")
     private String nombre;
 
     @Column(name="correo",unique = true,nullable = false)
     @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.unam.mx$", message = "correo invalido debe tener terminación unam.mx")
+    @NotNull(message = "No pusiste correo")
     private String correo;
 
     @JsonProperty("contrasena")
     @Column(name="contraseña",nullable = false)
+    @NotNull(message = "No pusiste contrasena")
     private String contraseña;
 
     @Column(name="num_institucional",length = 9,unique = true,nullable = false)
     @Pattern(regexp = "[0-9]{9}", message = "no. de cuenta invalido, debe ser de longitud 9 y solo números")
+    @NotNull(message = "No pusiste no. institucional")
     private String numInstitucional;
-    
+
     @Column(name="carrera")
     @ColumnDefault(value = "'No aplica'")
     private String carrera = "No aplica";
 
     @Column(name="telefono",length = 10,nullable = false)
     @Pattern(regexp = "[0-9]{10}", message = "telefono invalido")
+    @NotNull(message = "No pusiste telefono")
     private String telefono;
 
     @Column(name="activo",nullable = false)
