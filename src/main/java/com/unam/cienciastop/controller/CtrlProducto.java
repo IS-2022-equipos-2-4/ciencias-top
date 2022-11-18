@@ -29,6 +29,7 @@ public class CtrlProducto {
     @Autowired
     private SvcProducto svcProducto;
 
+    @Secured({"ROLE_USER","ROLE_ADMIN","ROLE_PROVIDER"})
     @GetMapping("/productos")
     public ResponseEntity<List<Producto>> getProductos() {
         return new ResponseEntity<>(svcProducto.getProductos(), HttpStatus.OK);
