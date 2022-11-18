@@ -7,5 +7,5 @@ public interface SvcPumapuntos {
     Integer getPumapuntos(Integer idUsuario);
 
     /** Suma puma puntos al idUsuario seleccionado, la cantidad puede ser negativa.  */
-    Boolean sumarPumapuntos(Integer idUsuario, Integer cantidad);
+    Integer sumarPumapuntos(Integer idUsuario, Integer cantidad);
 }
