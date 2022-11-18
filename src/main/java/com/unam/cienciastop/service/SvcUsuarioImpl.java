@@ -28,7 +28,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.bouncycastle.asn1.ua.UAObjectIdentifiers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -148,11 +148,21 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         }
     }
 
+    private boolean existeRol(Long idRol, List<Role> roles){
+        for (Role role : roles) {
+            if(role.getId() == idRol)
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDto) {
         Usuario usuario = repoUsuario.findById(id_usuario)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
                         "error, no se puede modificar un usuario inexistente."));
+
+        List<Role> roles = usuario.getRoles();
 
         if (usuarioDto.getNombre() != null)
             usuario.setNombre(usuarioDto.getNombre());
@@ -160,10 +170,18 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
             usuario.setCorreo(usuarioDto.getCorreo());
         if (usuarioDto.getTelefono() != null)
             usuario.setTelefono(usuarioDto.getTelefono());
-        if (usuarioDto.getEsProveedor() != null)
+        if (usuarioDto.getEsProveedor() != null){
+            if(!existeRol(3L, roles))
+                roles.add(repoRoles.findById(3L).get());
+            
             usuario.setEsProveedor(usuarioDto.getEsProveedor());
-        if (usuarioDto.getEsAdmin() != null)
+
+        } if (usuarioDto.getEsAdmin() != null){
+            if(!existeRol(1L, roles))
+                roles.add(repoRoles.findById(1L).get());
+
             usuario.setEsAdmin(usuarioDto.getEsAdmin());
+        }
 
         try {
             repoUsuario.save(usuario);
