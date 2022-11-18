@@ -39,9 +39,10 @@ public class CtrlPumapuntos {
      */
     @Secured("ROLE_ADMIN")
     @PostMapping("/pumapuntos/{id_usuario}/sumar/{cantidad}")
-    public ResponseEntity<Boolean> sumarPumapuntos(
+    public ResponseEntity<Integer> sumarPumapuntos(
         @PathVariable(value = "id_usuario") Integer idUsuario,
         @PathVariable(value = "cantidad") Integer cantidad) {
-        return new ResponseEntity<Boolean>(svcPuma.sumarPumapuntos(idUsuario, cantidad), HttpStatus.OK);        
+        return new ResponseEntity<Integer>(svcPuma.sumarPumapuntos(idUsuario, cantidad), HttpStatus.OK);        
     }
 }
+
