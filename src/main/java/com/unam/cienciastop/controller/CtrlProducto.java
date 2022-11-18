@@ -58,6 +58,7 @@ public class CtrlProducto {
      * @param codigo
      * @return ResponseEntity<List<Producto>>
      */
+    @Secured({"ROLE_USER","ROLE_ADMIN","ROLE_PROVIDER"})
     @GetMapping("/productos/codigo/{codigo}")
     public ResponseEntity<List<Producto>> getProductos_codigo(
             @PathVariable(value = "codigo") String codigo) {
@@ -74,6 +75,7 @@ public class CtrlProducto {
      * @param nombre
      * @return ResponseEntity<List<Producto>>
      */
+    @Secured({"ROLE_USER","ROLE_ADMIN","ROLE_PROVIDER"})
     @GetMapping("/productos/nombre/{nombre}")
     public ResponseEntity<List<Producto>> getProductos_nombre(
             @PathVariable(value = "nombre") String nombre) {
