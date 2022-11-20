@@ -35,6 +35,10 @@ public class SvcPumapuntosImpl implements SvcPumapuntos{
             Pumapuntos pumaPuntos = repoPuma.findById(idUsuario).get();
             int saldo = pumaPuntos.getSaldo();
             saldo += cantidad;
+
+            if (saldo < 0)
+                throw new ApiException(HttpStatus.NOT_FOUND, "La cantidad a restar supera el saldo actual");
+
             pumaPuntos.setSaldo(saldo);
             repoPuma.save(pumaPuntos);
             return saldo; 

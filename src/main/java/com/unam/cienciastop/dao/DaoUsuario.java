@@ -41,9 +41,5 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     @Query(value = "SELECT * FROM usuarios WHERE POSITION (:correo IN correo)>0", nativeQuery = true)
     public List<Usuario> getUsuarios_correo(@Param("correo") String correo);
 
-//     @Modifying
-//     @Query(value = "UPDATE usuarios SET nombre = new_nombre, correo = new_correo," +
-//            "telefono = new_telefono, esProveedor = new_esProveedor, esAdmin = new_esAdmin WHERE usuario.id = id;")
-//     public void editarUsuario(Integer id, String new_nombre, String new_correo, String new_telefono,
-//                               Boolean new_esProveedor, Boolean new_esAdmin);
+    Usuario findByNumInstitucional(String numInstitucional);
 }
