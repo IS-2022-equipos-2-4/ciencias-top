@@ -1,9 +1,20 @@
 package com.unam.cienciastop.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 public class UsuarioDTO {
+    @NotNull(message = "No pusiste nombre")
     private String nombre;
+
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9]+.unam.mx$",message = "correo invalido debe tener terminación unam.mx")
+    @NotNull(message = "No pusiste correo")
     private String correo;
+
+    @Pattern(regexp = "[0-9]{10}", message = "telefono invalido")
+    @NotNull(message = "No pusiste telefono")
     private String telefono;
+    
     private Boolean esProveedor;
     private Boolean esAdmin;
 

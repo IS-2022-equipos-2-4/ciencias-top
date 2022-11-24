@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.unam.cienciastop.entity.Producto;
+import com.unam.cienciastop.entity.Usuario;
 
 public interface DaoProducto extends CrudRepository<Producto,Integer>{
     /**
@@ -35,4 +36,6 @@ public interface DaoProducto extends CrudRepository<Producto,Integer>{
      */
     @Query(value = "SELECT * FROM productos WHERE POSITION (:nombre IN nombre)>0", nativeQuery = true)
     public List<Producto> getProductos_nombre(@Param("nombre") String nombre);
+
+    List<Producto> findByProveedor(Usuario proveedor);
 }

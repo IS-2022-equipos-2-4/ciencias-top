@@ -11,10 +11,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.dto.UsuarioDTO;
+import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
 import com.unam.cienciastop.entity.Role;
 import com.unam.cienciastop.entity.Usuario;
@@ -40,6 +42,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
     @Autowired
     private DaoUsuario repoUsuario;
+
+    @Autowired
+    private DaoProducto repoProducto;
 
     @Autowired
     private DaoPumapuntos repoPumapuntos;
@@ -148,14 +153,6 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         }
     }
 
-    private boolean existeRol(Long idRol, List<Role> roles){
-        for (Role role : roles) {
-            if(role.getId() == idRol)
-                return true;
-        }
-        return false;
-    }
-
     @Override
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDto) {
         Usuario usuario = repoUsuario.findById(id_usuario)
@@ -164,24 +161,55 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
         List<Role> roles = usuario.getRoles();
 
-        if (usuarioDto.getNombre() != null)
-            usuario.setNombre(usuarioDto.getNombre());
-        if (usuarioDto.getCorreo() != null)
-            usuario.setCorreo(usuarioDto.getCorreo());
-        if (usuarioDto.getTelefono() != null)
-            usuario.setTelefono(usuarioDto.getTelefono());
-        if (usuarioDto.getEsProveedor() != null){
-            if(!existeRol(3L, roles))
-                roles.add(repoRoles.findById(3L).get());
-            
-            usuario.setEsProveedor(usuarioDto.getEsProveedor());
+        if(usuarioDto.getEsAdmin() && !usuario.getEsAdmin()){
+            roles.add(repoRoles.findById(1L).get());
+            usuario.setEsAdmin(true);
 
-        } if (usuarioDto.getEsAdmin() != null){
-            if(!existeRol(1L, roles))
-                roles.add(repoRoles.findById(1L).get());
+        } else if (!usuarioDto.getEsAdmin() && usuario.getEsAdmin()){
+            if (usuario.getNumInstitucional().equals("999999999")) {
+                throw new ApiException(HttpStatus.NOT_FOUND, 
+                        "Los permisos del usuario "+ usuario.getNombre() +"no pueden ser modificados");
+            }
 
-            usuario.setEsAdmin(usuarioDto.getEsAdmin());
-        }
+            List<Producto> productosProveedor = repoProducto.findByProveedor(usuario);
+
+            if (productosProveedor.size() != 0 || productosProveedor == null)
+                throw new ApiException(HttpStatus.NOT_FOUND, 
+                        "Imposible eliminar el rol admin. El usuario tiene productos registrados");
+
+            // eliminamos el rol admin de su lista
+            for (int i = 0; i < roles.size(); i++) {
+                if (roles.get(i).getId() == 1L)
+                    roles.remove(i);
+            }
+
+            usuario.setEsAdmin(false);
+        } 
+
+        if(usuarioDto.getEsProveedor() && !usuario.getEsProveedor()){
+            roles.add(repoRoles.findById(3L).get());
+            usuario.setEsProveedor(true);
+
+        } else if (!usuarioDto.getEsProveedor() && usuario.getEsProveedor()){
+            if (usuario.getNumInstitucional().equals("999999999")) {
+                throw new ApiException(HttpStatus.NOT_FOUND, 
+                        "Los permisos del usuario "+ usuario.getNombre() +"no pueden ser modificados");
+            }
+
+            List<Producto> productosProveedor = repoProducto.findByProveedor(usuario);
+
+            if (productosProveedor.size() != 0 || productosProveedor == null)
+                throw new ApiException(HttpStatus.NOT_FOUND, 
+                        "Imposible eliminar el rol proveedor. El usuario tiene productos registrados");
+
+            // eliminamos el rol proveedor de su lista
+            for (int i = 0; i < roles.size(); i++) {
+                if (roles.get(i).getId() == 3L)
+                    roles.remove(i);
+            }
+
+            usuario.setEsProveedor(false);
+        } 
 
         try {
             repoUsuario.save(usuario);

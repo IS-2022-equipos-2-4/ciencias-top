@@ -117,8 +117,12 @@ public class CtrlUsuario {
     @PostMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> editarUsuario(
             @PathVariable(value = "id_usuario") Integer id_usuario,
-            @RequestBody UsuarioDTO usuarioDTO) {
-        return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),
-                HttpStatus.OK);
+            @Valid @RequestBody UsuarioDTO usuarioDTO,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST,
+                    bindingResult.getAllErrors().get(0).getDefaultMessage());
+        }
+        return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
     }
 }
