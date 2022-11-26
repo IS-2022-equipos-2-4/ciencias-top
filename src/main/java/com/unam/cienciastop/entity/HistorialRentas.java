@@ -36,8 +36,11 @@ public class HistorialRentas {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private EjemplarProducto itemProducto;
 
-    @Column(name="fecha")
-    private LocalDate fecha;
+    @Column(name="fecha_renta")
+    private LocalDate fechaRenta;
+
+    @Column(name="fecha_devolucion")
+    private LocalDate fechaDevolucion;
 
     // Indica si el producto rentado por el usuario ya fue devuelto
     @Column(name = "devuelto")
@@ -67,12 +70,20 @@ public class HistorialRentas {
         this.itemProducto = itemProducto;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public LocalDate getFechaRenta() {
+        return fechaRenta;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setFechaRenta(LocalDate fechaRenta) {
+        this.fechaRenta = fechaRenta;
+    }
+
+    public LocalDate getFechaDevolucion() {
+        return fechaDevolucion;
+    }
+
+    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
     }
 
     public Boolean getDevuelto() {

@@ -36,6 +36,6 @@ public interface DaoProducto extends CrudRepository<Producto,Integer>{
      */
     @Query(value = "SELECT * FROM productos WHERE POSITION (:nombre IN nombre)>0", nativeQuery = true)
     public List<Producto> getProductos_nombre(@Param("nombre") String nombre);
-
+    
     List<Producto> findByProveedor(Usuario proveedor);
 }

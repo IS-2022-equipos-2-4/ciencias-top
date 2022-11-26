@@ -1,7 +1,7 @@
 package com.unam.cienciastop.service;
 
 import java.util.List;
-
+import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.Producto;
 
 public interface SvcProducto {
@@ -27,4 +27,9 @@ public interface SvcProducto {
      */
     public List<Producto> getProductos_nombre(String nombre);
     Producto crearProducto(Producto producto, Integer idProveedor);
+
+
+    public EjemplarProducto rentarProducto(Integer idProducto, String numInstitucionalUsuario);
+
+    // public void devolverEjemplar(Integer idEjemplar, String numInstitucionalUsuario);
 }
