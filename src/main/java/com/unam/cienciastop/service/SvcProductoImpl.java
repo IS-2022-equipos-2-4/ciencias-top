@@ -160,7 +160,7 @@ public class SvcProductoImpl implements SvcProducto {
         List<HistorialRentas> rentas = this.repoHistorialRentas.rentasByIdUsuario(idUsuario);
         int numRentasDelMes = (int) rentas.stream().filter(renta -> {
             LocalDate fechaRenta = renta.getFechaRenta();
-            return fechaRenta.isAfter(inicioDelMes);
+            return fechaRenta.isAfter(inicioDelMes) || fechaRenta.isEqual(inicioDelMes);
         }).count();
         
         if (numRentasDelMes >= 3) {
