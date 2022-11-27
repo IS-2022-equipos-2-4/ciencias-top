@@ -241,7 +241,7 @@ public class SvcProductoImpl implements SvcProducto {
         if (ChronoUnit.DAYS.between(renta.getFechaRenta(), fechaActual) > producto
                 .getLimitePrestamo()) {
             Pumapuntos pumapuntos = repoPumapuntos.getPumapuntos(idUsuario);
-            pumapuntos.setSaldo(Math.min(pumapuntos.getSaldo() - 20, 0));
+            pumapuntos.setSaldo(Math.max(pumapuntos.getSaldo() - 20, 0));
             repoPumapuntos.save(pumapuntos);
 
             devolucionTardia = true;
