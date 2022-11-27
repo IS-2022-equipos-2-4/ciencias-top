@@ -3,6 +3,8 @@ package com.unam.cienciastop.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dao.DaoEjemplarProducto;
 import com.unam.cienciastop.dao.DaoHistorialRentas;
 import com.unam.cienciastop.dao.DaoProducto;
@@ -133,27 +136,31 @@ public class SvcProductoImpl implements SvcProducto {
         }
     }
 
-    @Override 
+    @Override
     public EjemplarProducto rentarProducto(Integer idProducto, String numInstitucionalUsuario) {
         Usuario usuario = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
-        Integer idUsuario = usuario.getId();  
+        Integer idUsuario = usuario.getId();
 
         Producto producto = this.repoProducto.getProducto_id(idProducto);
 
         if (producto == null) {
-            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "no existe un producto con el id especificado");
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "no existe un producto con el id especificado");
         }
 
         Pumapuntos pumapuntos = repoPumapuntos.getPumapuntos(idUsuario);
 
         if (pumapuntos.getSaldo() < producto.getCosto()) {
-            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "el usuario no tiene suficientes pumapuntos para rentar este producto");
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "el usuario no tiene suficientes pumapuntos para rentar este producto");
         }
 
-        List<EjemplarProducto> ejemplaresDisponibles = this.repoEjemplarProducto.getEjemplaresDisponiblesByIdProducto(idProducto);        
+        List<EjemplarProducto> ejemplaresDisponibles =
+                this.repoEjemplarProducto.getEjemplaresDisponiblesByIdProducto(idProducto);
 
         if (ejemplaresDisponibles.size() == 0) {
-            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "no hay ejemplares disponibles de este producto");
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "no hay ejemplares disponibles de este producto");
         }
 
         LocalDate inicioDelMes = LocalDate.now().withDayOfMonth(1);
@@ -162,16 +169,17 @@ public class SvcProductoImpl implements SvcProducto {
             LocalDate fechaRenta = renta.getFechaRenta();
             return fechaRenta.isAfter(inicioDelMes) || fechaRenta.isEqual(inicioDelMes);
         }).count();
-        
+
         if (numRentasDelMes >= 3) {
-            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "la cantidad máxima de rentas de este mes del usuario se ha alcanzado");
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "la cantidad máxima de rentas de este mes del usuario se ha alcanzado");
         }
 
 
         EjemplarProducto ejemplar = ejemplaresDisponibles.get(0);
         ejemplar.setDisponible(false);
         repoEjemplarProducto.save(ejemplar);
-        
+
         producto.setStock(producto.getStock() - 1);
         repoProducto.save(producto);
 
@@ -190,6 +198,55 @@ public class SvcProductoImpl implements SvcProducto {
         return ejemplar;
     }
 
-    // @Override
-    // public void devolverEjemplar(Integer idEjemplar, String numInstitucionalUsuario) {}
+    @Override
+    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar,
+            String numInstitucionalUsuario) {
+        Usuario usuario = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
+        Integer idUsuario = usuario.getId();
+
+        Optional<EjemplarProducto> maybeEjemplar = this.repoEjemplarProducto.findById(idEjemplar);
+
+        if (!maybeEjemplar.isPresent()) {
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "no existe el ejemplar que se quiere devolver");
+        }
+        EjemplarProducto ejemplar = maybeEjemplar.get();
+
+        List<HistorialRentas> rentas = this.repoHistorialRentas.rentasByIdUsuario(idUsuario);
+        Optional<HistorialRentas> maybeRenta = rentas.stream().filter(renta -> {
+            return renta.getItemProducto().getIdEjemplar() == idEjemplar
+                    && ! renta.getDevuelto();
+        }).findAny();
+
+        if (!maybeRenta.isPresent()) {
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "no tienes rentado actualmente este ejemplar");
+        }
+
+        LocalDate fechaActual = LocalDate.now();
+
+        HistorialRentas renta = (HistorialRentas) maybeRenta.get();
+        renta.setFechaDevolucion(fechaActual);
+        renta.setDevuelto(true);
+        repoHistorialRentas.save(renta);
+
+        Producto producto = ejemplar.getProducto();
+        producto.setStock(producto.getStock() + 1);
+        repoProducto.save(producto);
+
+        ejemplar.setDisponible(true);
+        repoEjemplarProducto.save(ejemplar);
+
+        boolean devolucionTardia = false;
+        if (ChronoUnit.DAYS.between(renta.getFechaRenta(), fechaActual) > producto
+                .getLimitePrestamo()) {
+            Pumapuntos pumapuntos = repoPumapuntos.getPumapuntos(idUsuario);
+            pumapuntos.setSaldo(Math.min(pumapuntos.getSaldo() - 20, 0));
+            repoPumapuntos.save(pumapuntos);
+
+            devolucionTardia = true;
+        }
+
+        return new RespuestaDevolverEjemplarDTO(devolucionTardia);
+    }
 }
