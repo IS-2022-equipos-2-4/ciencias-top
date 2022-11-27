@@ -21,6 +21,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.Usuario;
+import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcProducto;
 
@@ -115,12 +116,13 @@ public class CtrlProducto {
                 svcProducto.rentarProducto(idProducto, numInstitucionalUsuario), HttpStatus.OK);
     }
 
-    // @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
-    // @PostMapping("/devolver-ejemplar/{id_ejemplar}")
-    // public ResponseEntity devolverEjemplar(
-    // @PathVariable(value = "id_ejemplar") Integer idEjemplar,
-    // @AuthenticationPrincipal String numInstitucionalUsuario) {
-    // return new ResponseEntity<>(
-    // svcProducto.devolverEjemplar(idEjemplar, numInstitucionalUsuario), HttpStatus.OK);
-    // }
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
+    @PostMapping("/devolver-ejemplar/{id_ejemplar}")
+    public ResponseEntity<RespuestaDevolverEjemplarDTO> devolverEjemplar(
+            @PathVariable(value = "id_ejemplar") Integer idEjemplar,
+            @AuthenticationPrincipal String numInstitucionalUsuario) {
+
+        return new ResponseEntity<RespuestaDevolverEjemplarDTO>(
+                svcProducto.devolverEjemplar(idEjemplar, numInstitucionalUsuario), HttpStatus.OK);
+    }
 }
