@@ -248,4 +248,31 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 	public Usuario findByNumInstitucional(String username) {
 		return repoUsuario.findByNumInstitucional(username);
 	}
+
+    //Preguntar a Jasso sobre la etiqueta Transactional y la carpeta Dto
+    @Override
+    @Transactional(readOnly=true)
+    public String[] getPerfil(Integer id) {
+        Usuario usuario=(Usuario) repoUsuario.findById(id).get();
+        Pumapuntos pumapuntos=(Pumapuntos) repoPumapuntos.getPumapuntos(id);
+        String[] atributos=new String[8];
+        atributos[0]=usuario.getNombre();
+        atributos[1]=usuario.getCorreo();
+        atributos[2]=usuario.getNumInstitucional();
+        atributos[3]=usuario.getCarrera();
+        atributos[4]=usuario.getTelefono();
+        //aqui iria el get productos rentados
+        atributos[6]=pumapuntos.getSaldo().toString();
+        //Preguntar a Jasso sobre si agregar este atributo que no viene en los requerimientos del proyecto 
+        String roles="Usuario";
+        if (usuario.getEsProveedor()==true){
+            roles+=",Proveedor";
+        }
+        if (usuario.getEsAdmin()==true){
+            roles+=",Admin";
+        }
+
+        atributos[7]=roles;
+        return atributos;
+    }
 }

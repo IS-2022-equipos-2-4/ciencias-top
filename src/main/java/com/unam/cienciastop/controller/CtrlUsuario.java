@@ -33,12 +33,23 @@ public class CtrlUsuario {
     @Autowired
     private SvcUsuario svcUsuario;
 
+
     @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> getUsuariosActivos() {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
     }
-
+    
+    @Secured({"ROLE_USER", "ROLE_ADMIN","ROLE_PROVIDER"})
+    @GetMapping("/usuarios/{id_usuario}")
+    public ResponseEntity<String[]> getPerfil(@PathVariable(value = "id_usuario") Integer idUsuario) {
+       String[] atributos=svcUsuario.getPerfil(idUsuario);
+       if (atributos!=null)
+          return new ResponseEntity<>(atributos, HttpStatus.OK);
+       else
+          throw new ApiException(HttpStatus.NOT_FOUND, 
+                    "Ocurrio un error, el usuario con ese id no existe");
+    }
     /**
      * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.
      * 
@@ -54,7 +65,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -73,7 +84,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -92,7 +103,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
     
     @Secured("ROLE_ADMIN")
@@ -125,4 +136,7 @@ public class CtrlUsuario {
         }
         return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
     }
+
+
+
 }
