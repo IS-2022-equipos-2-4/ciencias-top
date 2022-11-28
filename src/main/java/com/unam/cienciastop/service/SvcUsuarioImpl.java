@@ -255,14 +255,16 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     public String[] getPerfil(Integer id) {
         Usuario usuario=(Usuario) repoUsuario.findById(id).get();
         Pumapuntos pumapuntos=(Pumapuntos) repoPumapuntos.getPumapuntos(id);
-        String[] atributos=new String[8];
+        String[] atributos=new String[9];
         atributos[0]=usuario.getNombre();
         atributos[1]=usuario.getCorreo();
         atributos[2]=usuario.getNumInstitucional();
         atributos[3]=usuario.getCarrera();
         atributos[4]=usuario.getTelefono();
+        
+        atributos[5]=pumapuntos.getSaldo().toString();
         //aqui iria el get productos rentados
-        atributos[6]=pumapuntos.getSaldo().toString();
+        //aqui iria el caso para productos aun no devueltos
         //Preguntar a Jasso sobre si agregar este atributo que no viene en los requerimientos del proyecto 
         String roles="Usuario";
         if (usuario.getEsProveedor()==true){
@@ -272,7 +274,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
             roles+=",Admin";
         }
 
-        atributos[7]=roles;
+        atributos[8]=roles;
         return atributos;
+
+
     }
 }
