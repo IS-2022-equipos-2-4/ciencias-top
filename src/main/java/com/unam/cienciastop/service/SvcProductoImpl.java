@@ -249,4 +249,23 @@ public class SvcProductoImpl implements SvcProducto {
 
         return new RespuestaDevolverEjemplarDTO(devolucionTardia);
     }
+
+    /**
+     * Metodo que recibe un idEjemplar y regresa la lista de objetos 
+     * HistorialRentas asociado a dicho idEjemplar.
+     * 
+     * @param idEjemplar
+     * @return List<HistorialRentas>
+     */
+    @Override
+    public List<HistorialRentas> verProdRentados(Integer idEjemplar) {
+        try {
+            return repoHistorialRentas.rentasByIdUsuario(idEjemplar);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
 }
