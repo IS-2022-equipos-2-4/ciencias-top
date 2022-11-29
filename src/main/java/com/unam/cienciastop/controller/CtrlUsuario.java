@@ -125,4 +125,11 @@ public class CtrlUsuario {
         }
         return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
     }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuarios/{id_usuario}")
+    public ResponseEntity<Usuario> eliminarUsuario(
+            @PathVariable(value = "id_usuario") Integer id_usuario) {
+        return new ResponseEntity<>(svcUsuario.deleteUsuario(id_usuario), HttpStatus.OK);
+    }
 }

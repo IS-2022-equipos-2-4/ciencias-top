@@ -16,6 +16,8 @@ import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.dto.UsuarioDTO;
+import com.unam.cienciastop.dao.DaoHistorialRentas;
+import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
 import com.unam.cienciastop.entity.Role;
@@ -52,6 +54,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     @Autowired
     private DaoRoles repoRoles;
 
+    @Autowired
+    private DaoHistorialRentas repoHistorialRentas;
+
     @Override
     public List<Usuario> getUsuariosActivos() {
         try {
@@ -68,6 +73,33 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
                         "error, no se puede obtener un usuario inexistente."));
     };
+
+    /**
+     * Método que marca a un usuario como inactivo en la BD.
+     */
+    @Override
+    public void deleteUsuario(Integer id_usuario){
+        Usuario usuario = repoUsuario.findById(id_usuario)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                        "error, no se puede modificar un usuario inexistente."));
+
+        // List<Role> roles = usuario.getRoles();
+
+        List<Producto> productosProveedor = repoProducto.findByProveedor(usuario);
+
+        if (productosProveedor.size() != 0 || productosProveedor == null)
+            throw new ApiException(HttpStatus.NOT_FOUND, 
+                    "Imposible eliminar el usuario. El usuario tiene productos registrados");
+
+        List<HistorialRentas> productosRentados = repoHistorialRentas.rentasByIdUsuario(id_usuario);
+        
+        if (productosRentados.getDevuelto() == false) {
+            throw new ApiException(HttpStatus.NOT_FOUND, 
+                    "Imposible eliminar el usuario. El usuario tiene adeudos");    
+        }   
+
+        usuario.setActivo(false);
+    }
 
     /*
      * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.
