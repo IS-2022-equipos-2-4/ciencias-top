@@ -130,6 +130,6 @@ public class CtrlUsuario {
     @GetMapping("/usuarios/{id_usuario}")
     public ResponseEntity<Usuario> eliminarUsuario(
             @PathVariable(value = "id_usuario") Integer id_usuario) {
-        return new ResponseEntity<>(svcUsuario.deleteUsuario(id_usuario), HttpStatus.OK);
+        return new ResponseEntity<Usuario>(svcUsuario.deleteUsuario(id_usuario), HttpStatus.OK);
     }
 }

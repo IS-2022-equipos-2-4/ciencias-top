@@ -34,5 +34,5 @@ public interface SvcUsuario {
 
     public Usuario getUsuario_id(Integer id);
 
-    public void deleteUsuario(Integer id_usuario);
+    public Usuario deleteUsuario(Integer id_usuario);
 }
