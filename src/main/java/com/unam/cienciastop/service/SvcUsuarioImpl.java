@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoProducto;
@@ -77,7 +78,8 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     /**
      * Método que marca a un usuario como inactivo en la BD.
      */
-    @Override
+    @Override    
+    @Transactional
     public Usuario deleteUsuario(Integer id_usuario){
         try {
             // revisa si el usuario existe
