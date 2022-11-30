@@ -128,17 +128,17 @@ public class CtrlProducto {
     }
 
     /**
-     * Metodo que recibe un idEjemplar y regresa la lista de objetos 
+     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos 
      * HistorialRentas asociado a dicho idEjemplar.
      * 
-     * @param idEjemplar
+     * @param numInstitucionalUsuario
      * @return la lista de objetos HistorialRentas del id_usuario que se le pasa por parametro
      */
     @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
-    @GetMapping("/productos/productos-rentados/{id_usuario}")
+    @GetMapping("/productos/productos-rentados")
     public ResponseEntity<List<HistorialRentas>> verProdRentados(
-            @PathVariable(value = "id_usuario") Integer idEjemplar) {
-        List<HistorialRentas> prod_rent = svcProducto.verProdRentados(idEjemplar);
+        @AuthenticationPrincipal String numInstitucionalUsuario) {
+        List<HistorialRentas> prod_rent = svcProducto.verProdRentados(numInstitucionalUsuario);
         if (prod_rent != null)
             return new ResponseEntity<>(prod_rent,HttpStatus.OK);
         else

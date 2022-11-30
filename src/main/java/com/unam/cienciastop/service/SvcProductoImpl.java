@@ -251,16 +251,18 @@ public class SvcProductoImpl implements SvcProducto {
     }
 
     /**
-     * Metodo que recibe un idEjemplar y regresa la lista de objetos 
+     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos 
      * HistorialRentas asociado a dicho idEjemplar.
      * 
-     * @param idEjemplar
+     * @param numInstitucionalUsuario
      * @return List<HistorialRentas>
      */
     @Override
-    public List<HistorialRentas> verProdRentados(Integer idEjemplar) {
+    public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario) {
+        Usuario usuario = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
+        Integer idUsuario = usuario.getId();
         try {
-            return repoHistorialRentas.rentasByIdUsuario(idEjemplar);
+            return repoHistorialRentas.rentasByIdUsuario(idUsuario);
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "error en la consulta a la base de datos");

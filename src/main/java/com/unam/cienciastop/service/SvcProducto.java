@@ -42,5 +42,5 @@ public interface SvcProducto {
      * @param idEjemplar
      * @return List<HistorialRentas>
      */
-    public List<HistorialRentas> verProdRentados(Integer idEjemplar);
+    public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario);
 }
