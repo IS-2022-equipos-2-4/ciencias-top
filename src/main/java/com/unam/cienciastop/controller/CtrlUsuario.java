@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -127,9 +128,9 @@ public class CtrlUsuario {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/usuarios/eliminar/{id_usuario}")
+    @DeleteMapping("/usuarios/eliminar/{id_usuario}")
     public ResponseEntity<Usuario> eliminarUsuario(
-            @PathVariable(value = "eliminar/id_usuario") Integer id_usr) {
+            @PathVariable(value = "id_usuario") Integer id_usr) {
         return new ResponseEntity<Usuario>(svcUsuario.deleteUsuario(id_usr), HttpStatus.OK);
     }
 }
