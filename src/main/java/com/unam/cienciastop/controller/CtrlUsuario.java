@@ -130,7 +130,7 @@ public class CtrlUsuario {
     @Secured("ROLE_ADMIN")
     @DeleteMapping("/usuarios/eliminar/{id_usuario}")
     public ResponseEntity<Usuario> eliminarUsuario(
-            @PathVariable(value = "id_usuario") Integer id_usr) {
-        return new ResponseEntity<Usuario>(svcUsuario.deleteUsuario(id_usr), HttpStatus.OK);
+            @PathVariable(value = "id_usuario") Integer id_usuario) {
+        return new ResponseEntity<Usuario>(svcUsuario.deleteUsuario(id_usuario), HttpStatus.OK);
     }
 }

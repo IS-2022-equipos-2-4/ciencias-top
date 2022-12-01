@@ -79,44 +79,48 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
      * Método que marca a un usuario como inactivo en la BD.
      */
     @Override    
-    @Transactional
     public Usuario deleteUsuario(Integer id_usuario){
-        try {
-            // revisa si el usuario existe
-            Usuario usuario = repoUsuario.findById(id_usuario)
-                    .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
-                            "error, no se puede modificar un usuario inexistente."));        
+        
+        // revisa si el usuario existe
+        Usuario usuario = repoUsuario.findById(id_usuario)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                        "error, no se puede modificar un usuario inexistente."));        
 
-            // revisa si el usuario es proveedor, si es así, revisa si tiene productos registrados
-            if (usuario.getEsProveedor()) {
-                List<Producto> productosProveedor = repoProducto.findByProveedor(usuario);
-                if (productosProveedor.size() != 0 || productosProveedor == null){
+        // revisa si el usuario es proveedor, si es así, revisa si tiene productos registrados
+        if (usuario.getEsProveedor()) {
+            List<Producto> productosProveedor = repoProducto.findByProveedor(usuario);
+            if (productosProveedor.size() != 0 || productosProveedor == null){
+                throw new ApiException(HttpStatus.NOT_FOUND, 
+                    "Imposible eliminar el usuario. El usuario tiene productos registrados");            
+            }    
+        }        
+
+        // revisa si el usuario tiene productos rentados sin regresar
+        List<HistorialRentas> productosRentados = repoHistorialRentas.rentasByIdUsuario(id_usuario);
+        if (productosRentados.size() != 0 || productosRentados != null){
+            for (HistorialRentas producto : productosRentados) {
+                if (producto.getDevuelto() == false) {
                     throw new ApiException(HttpStatus.NOT_FOUND, 
-                        "Imposible eliminar el usuario. El usuario tiene productos registrados");            
-                }    
-            }        
-
-            // revisa si el usuario tiene productos rentados sin regresar
-            List<HistorialRentas> productosRentados = repoHistorialRentas.rentasByIdUsuario(id_usuario);
-            if (productosRentados.size() != 0 || productosRentados != null){
-                for (HistorialRentas producto : productosRentados) {
-                    if (producto.getDevuelto() == false) {
-                        throw new ApiException(HttpStatus.NOT_FOUND, 
-                                "Imposible eliminar el usuario. El usuario tiene adeudos");    
-                    }       
+                            "Imposible eliminar el usuario. El usuario tiene adeudos");    
                 }       
-            }
+            }       
+        }
             
-            // establece el estado del usuario como 'no activo'
-            usuario.setActivo(false);
-            
+        // establece el estado del usuario como 'no activo'
+        usuario.setActivo(false);
+        // guarda los cambios en la BD
+        try {
+            // return repoUsuario.save(usuario);
             return usuario;
-
+        } catch (DataIntegrityViolationException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "error, ya hay un usuario registrado con ese correo o no. cuenta / trabajador");
         } catch (DataAccessException e) {
-            throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getLocalizedMessage());
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
-        }        
+        }      
     }
 
     /*
