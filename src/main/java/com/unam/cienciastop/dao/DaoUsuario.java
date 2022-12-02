@@ -42,8 +42,4 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     public List<Usuario> getUsuarios_correo(@Param("correo") String correo);
 
     Usuario findByNumInstitucional(String numInstitucional);
-
-    @Modifying
-    @Query("UPDATE Usuarios u SET u.activo = false WHERE u.id_usuario = :id_usuario")
-    public void desactivar_usuario(@Param("id_usuario") Integer id_usuario);
 }
