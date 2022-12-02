@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dao.DaoEjemplarProducto;
 import com.unam.cienciastop.dao.DaoHistorialRentas;
@@ -248,5 +249,25 @@ public class SvcProductoImpl implements SvcProducto {
         }
 
         return new RespuestaDevolverEjemplarDTO(devolucionTardia);
+    }
+
+    @Override
+    public Producto editarProducto(Integer id_producto, ProductoDTO productodto) {
+        Producto prod = repoProducto.findById(id_producto)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 
+                "error, no se puede editar un producto que no existe."));
+        
+        // TODO revisar que este en productos del proveedor
+
+        try {
+            repoProducto.save(prod);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "error al consultar la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+        
+        return prod;
     }
 }
