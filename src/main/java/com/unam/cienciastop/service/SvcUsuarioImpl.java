@@ -110,7 +110,8 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         usuario.setActivo(false);
         // guarda los cambios en la BD
         try {
-            // return repoUsuario.save(usuario);
+            repoUsuario.desactivar_usuario(id_usuario);
+            // return repoUsuario.save(usuario);        //todo guardar en la base de datos
             return usuario;
         } catch (DataIntegrityViolationException e) {
             throw new ApiException(HttpStatus.NOT_FOUND,
