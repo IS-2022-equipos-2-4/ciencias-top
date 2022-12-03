@@ -109,7 +109,7 @@ public class CtrlProducto {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_PROVIDER"})
-    @PostMapping("/productos/{id_producto}")
+    @PostMapping("/productos/editar/{id_producto}")
     public ResponseEntity<Producto> editarProducto(
             @PathVariable(value = "id_producto") Integer id_producto,
             @Valid @RequestBody ProductoDTO productodto,
