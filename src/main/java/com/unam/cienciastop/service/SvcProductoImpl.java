@@ -259,6 +259,13 @@ public class SvcProductoImpl implements SvcProducto {
         
         // TODO revisar que este en productos del proveedor
 
+        prod.setCodigo(productodto.getCodigo());
+        prod.setNombre(productodto.getNombre());
+        prod.setDescripcion(productodto.getDescripcion());
+        prod.setCosto(productodto.getCosto());
+        prod.setStock(productodto.getStock());
+        prod.setLimitePrestamo(productodto.getLimitePrestamo());
+
         try {
             repoProducto.save(prod);
         } catch (DataAccessException e) {
