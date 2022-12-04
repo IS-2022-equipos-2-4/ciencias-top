@@ -2,6 +2,7 @@ package com.unam.cienciastop.service;
 
 import java.util.List;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
+import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Producto;
@@ -43,4 +44,6 @@ public interface SvcProducto {
      * @return List<HistorialRentas>
      */
     public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario);
+
+    public List<RespuestaGetEjemplaresDTO> getEjemplares(Integer idProducto);
 }

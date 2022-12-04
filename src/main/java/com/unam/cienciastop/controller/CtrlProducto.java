@@ -23,6 +23,7 @@ import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
+import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcProducto;
 
@@ -142,5 +143,19 @@ public class CtrlProducto {
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
                     "ocurrio un error, no se econtraron productos");
+    }
+
+    /**
+     * Método que recibe el id de un producto y devuelve los ejemplares de este
+     * 
+     * @param idProducto
+     * @return RespuestaGetEjemplares
+     */
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/productos/{id_producto}/ejemplares")
+    public ResponseEntity<List<RespuestaGetEjemplaresDTO>> getEjemplares(
+            @PathVariable(value = "id_producto") Integer idProducto) {
+        return new ResponseEntity<List<RespuestaGetEjemplaresDTO>>(
+                svcProducto.getEjemplares(idProducto), HttpStatus.OK);
     }
 }
