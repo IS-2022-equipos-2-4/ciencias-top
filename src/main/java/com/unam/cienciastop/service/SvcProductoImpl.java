@@ -173,7 +173,7 @@ public class SvcProductoImpl implements SvcProducto {
             return fechaRenta.isAfter(inicioDelMes) || fechaRenta.isEqual(inicioDelMes);
         }).count();
 
-        if (numRentasDelMes >= 100) {
+        if (numRentasDelMes >= 3) {
             throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
                     "la cantidad máxima de rentas de este mes del usuario se ha alcanzado");
         }
