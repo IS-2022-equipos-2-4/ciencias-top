@@ -109,7 +109,7 @@ public class CtrlProducto {
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
-    @PostMapping("/rentar/{id_producto}")
+    @PostMapping("/productos/{id_producto}/rentar")
     public ResponseEntity<EjemplarProducto> rentarProducto(
             @PathVariable(value = "id_producto") Integer idProducto,
             @AuthenticationPrincipal String numInstitucionalUsuario) {
@@ -118,7 +118,7 @@ public class CtrlProducto {
     }
 
     @Secured({"ROLE_ADMIN"})
-    @PostMapping("/devolver-ejemplar/{id_ejemplar}")
+    @PostMapping("/productos/ejemplares/{id_ejemplar}/devolver")
     public ResponseEntity<RespuestaDevolverEjemplarDTO> devolverEjemplar(
             @PathVariable(value = "id_ejemplar") Integer idEjemplar) {
         return new ResponseEntity<RespuestaDevolverEjemplarDTO>(
