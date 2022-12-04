@@ -199,28 +199,23 @@ public class SvcProductoImpl implements SvcProducto {
     }
 
     @Override
-    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar,
-            String numInstitucionalUsuario) {
-        Usuario usuario = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
-        Integer idUsuario = usuario.getId();
-
+    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar) {
         Optional<EjemplarProducto> maybeEjemplar = this.repoEjemplarProducto.findById(idEjemplar);
 
         if (!maybeEjemplar.isPresent()) {
             throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
                     "no existe el ejemplar que se quiere devolver");
         }
-        EjemplarProducto ejemplar = maybeEjemplar.get();
 
-        List<HistorialRentas> rentas = this.repoHistorialRentas.rentasByIdUsuario(idUsuario);
+        List<HistorialRentas> rentas = this.repoHistorialRentas.rentasByIdEjemplar(idEjemplar);
+
         Optional<HistorialRentas> maybeRenta = rentas.stream().filter(renta -> {
-            return renta.getItemProducto().getIdEjemplar() == idEjemplar
-                    && ! renta.getDevuelto();
+            return renta.getItemProducto().getIdEjemplar() == idEjemplar && !renta.getDevuelto();
         }).findAny();
 
         if (!maybeRenta.isPresent()) {
             throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
-                    "no tienes rentado actualmente este ejemplar");
+                    "este ejemplar no está rentado actualmente");
         }
 
         LocalDate fechaActual = LocalDate.now();
@@ -230,12 +225,16 @@ public class SvcProductoImpl implements SvcProducto {
         renta.setDevuelto(true);
         repoHistorialRentas.save(renta);
 
+        Usuario usuario = renta.getUsuario();
+        Integer idUsuario = usuario.getId();
+
+        EjemplarProducto ejemplar = maybeEjemplar.get();
+        ejemplar.setDisponible(true);
+        repoEjemplarProducto.save(ejemplar);
+
         Producto producto = ejemplar.getProducto();
         producto.setStock(producto.getStock() + 1);
         repoProducto.save(producto);
-
-        ejemplar.setDisponible(true);
-        repoEjemplarProducto.save(ejemplar);
 
         boolean devolucionTardia = false;
         if (ChronoUnit.DAYS.between(renta.getFechaRenta(), fechaActual) > producto
@@ -251,8 +250,8 @@ public class SvcProductoImpl implements SvcProducto {
     }
 
     /**
-     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos 
-     * HistorialRentas asociado a dicho idEjemplar.
+     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos HistorialRentas
+     * asociado a dicho idEjemplar.
      * 
      * @param numInstitucionalUsuario
      * @return List<HistorialRentas>

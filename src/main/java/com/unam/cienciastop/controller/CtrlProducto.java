@@ -117,19 +117,17 @@ public class CtrlProducto {
                 svcProducto.rentarProducto(idProducto, numInstitucionalUsuario), HttpStatus.OK);
     }
 
-    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
+    @Secured({"ROLE_ADMIN"})
     @PostMapping("/devolver-ejemplar/{id_ejemplar}")
     public ResponseEntity<RespuestaDevolverEjemplarDTO> devolverEjemplar(
-            @PathVariable(value = "id_ejemplar") Integer idEjemplar,
-            @AuthenticationPrincipal String numInstitucionalUsuario) {
-
+            @PathVariable(value = "id_ejemplar") Integer idEjemplar) {
         return new ResponseEntity<RespuestaDevolverEjemplarDTO>(
-                svcProducto.devolverEjemplar(idEjemplar, numInstitucionalUsuario), HttpStatus.OK);
+                svcProducto.devolverEjemplar(idEjemplar), HttpStatus.OK);
     }
 
     /**
-     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos 
-     * HistorialRentas asociado a dicho idEjemplar.
+     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos HistorialRentas
+     * asociado a dicho idEjemplar.
      * 
      * @param numInstitucionalUsuario
      * @return la lista de objetos HistorialRentas del id_usuario que se le pasa por parametro
@@ -137,11 +135,12 @@ public class CtrlProducto {
     @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
     @GetMapping("/productos/productos-rentados")
     public ResponseEntity<List<HistorialRentas>> verProdRentados(
-        @AuthenticationPrincipal String numInstitucionalUsuario) {
+            @AuthenticationPrincipal String numInstitucionalUsuario) {
         List<HistorialRentas> prod_rent = svcProducto.verProdRentados(numInstitucionalUsuario);
         if (prod_rent != null)
-            return new ResponseEntity<>(prod_rent,HttpStatus.OK);
+            return new ResponseEntity<>(prod_rent, HttpStatus.OK);
         else
-            throw new ApiException(HttpStatus.NOT_FOUND, "ocurrio un error, no se econtraron productos");
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron productos");
     }
 }

@@ -33,7 +33,7 @@ public interface SvcProducto {
 
     public EjemplarProducto rentarProducto(Integer idProducto, String numInstitucionalUsuario);
 
-    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar, String numInstitucionalUsuario);
+    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar);
 
     /**
      * Metodo que recibe un idEjemplar y regresa la lista de objetos 
