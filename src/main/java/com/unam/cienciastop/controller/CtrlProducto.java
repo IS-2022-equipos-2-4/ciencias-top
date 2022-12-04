@@ -20,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.EjemplarProducto;
+import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -124,5 +125,23 @@ public class CtrlProducto {
 
         return new ResponseEntity<RespuestaDevolverEjemplarDTO>(
                 svcProducto.devolverEjemplar(idEjemplar, numInstitucionalUsuario), HttpStatus.OK);
+    }
+
+    /**
+     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos 
+     * HistorialRentas asociado a dicho idEjemplar.
+     * 
+     * @param numInstitucionalUsuario
+     * @return la lista de objetos HistorialRentas del id_usuario que se le pasa por parametro
+     */
+    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
+    @GetMapping("/productos/productos-rentados")
+    public ResponseEntity<List<HistorialRentas>> verProdRentados(
+        @AuthenticationPrincipal String numInstitucionalUsuario) {
+        List<HistorialRentas> prod_rent = svcProducto.verProdRentados(numInstitucionalUsuario);
+        if (prod_rent != null)
+            return new ResponseEntity<>(prod_rent,HttpStatus.OK);
+        else
+            throw new ApiException(HttpStatus.NOT_FOUND, "ocurrio un error, no se econtraron productos");
     }
 }
