@@ -45,5 +45,12 @@ public interface SvcProducto {
      */
     public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario);
 
+    /**
+     * Metodo que recibe un id y si cumple algunos requisitos 
+     * se borrará el producto asociado al codigo
+     * @param idProducto
+     */
+    public void eliminarProducto(Integer idProducto, String numInstitucionalUsuario);
+
     public List<RespuestaGetEjemplaresDTO> getEjemplares(Integer idProducto);
 }
