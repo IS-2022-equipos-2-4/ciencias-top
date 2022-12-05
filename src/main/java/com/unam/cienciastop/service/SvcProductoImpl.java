@@ -256,8 +256,6 @@ public class SvcProductoImpl implements SvcProducto {
         Producto prod = repoProducto.findById(id_producto)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 
                 "error, no se puede editar un producto que no existe."));
-        
-        // TODO revisar que este en productos del proveedor
 
         prod.setCodigo(productodto.getCodigo());
         prod.setNombre(productodto.getNombre());
