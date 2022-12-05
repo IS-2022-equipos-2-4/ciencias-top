@@ -23,6 +23,7 @@ import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
+import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcProducto;
 
@@ -109,7 +110,7 @@ public class CtrlProducto {
     }
 
     @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
-    @PostMapping("/rentar/{id_producto}")
+    @PostMapping("/productos/{id_producto}/rentar")
     public ResponseEntity<EjemplarProducto> rentarProducto(
             @PathVariable(value = "id_producto") Integer idProducto,
             @AuthenticationPrincipal String numInstitucionalUsuario) {
@@ -117,19 +118,17 @@ public class CtrlProducto {
                 svcProducto.rentarProducto(idProducto, numInstitucionalUsuario), HttpStatus.OK);
     }
 
-    @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
-    @PostMapping("/devolver-ejemplar/{id_ejemplar}")
+    @Secured({"ROLE_ADMIN"})
+    @PostMapping("/productos/ejemplares/{id_ejemplar}/devolver")
     public ResponseEntity<RespuestaDevolverEjemplarDTO> devolverEjemplar(
-            @PathVariable(value = "id_ejemplar") Integer idEjemplar,
-            @AuthenticationPrincipal String numInstitucionalUsuario) {
-
+            @PathVariable(value = "id_ejemplar") Integer idEjemplar) {
         return new ResponseEntity<RespuestaDevolverEjemplarDTO>(
-                svcProducto.devolverEjemplar(idEjemplar, numInstitucionalUsuario), HttpStatus.OK);
+                svcProducto.devolverEjemplar(idEjemplar), HttpStatus.OK);
     }
 
     /**
-     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos 
-     * HistorialRentas asociado a dicho idEjemplar.
+     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos HistorialRentas
+     * asociado a dicho idEjemplar.
      * 
      * @param numInstitucionalUsuario
      * @return la lista de objetos HistorialRentas del id_usuario que se le pasa por parametro
@@ -137,11 +136,26 @@ public class CtrlProducto {
     @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
     @GetMapping("/productos/productos-rentados")
     public ResponseEntity<List<HistorialRentas>> verProdRentados(
-        @AuthenticationPrincipal String numInstitucionalUsuario) {
+            @AuthenticationPrincipal String numInstitucionalUsuario) {
         List<HistorialRentas> prod_rent = svcProducto.verProdRentados(numInstitucionalUsuario);
         if (prod_rent != null)
-            return new ResponseEntity<>(prod_rent,HttpStatus.OK);
+            return new ResponseEntity<>(prod_rent, HttpStatus.OK);
         else
-            throw new ApiException(HttpStatus.NOT_FOUND, "ocurrio un error, no se econtraron productos");
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron productos");
+    }
+
+    /**
+     * Método que recibe el id de un producto y devuelve los ejemplares de este
+     * 
+     * @param idProducto
+     * @return RespuestaGetEjemplares
+     */
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/productos/{id_producto}/ejemplares")
+    public ResponseEntity<List<RespuestaGetEjemplaresDTO>> getEjemplares(
+            @PathVariable(value = "id_producto") Integer idProducto) {
+        return new ResponseEntity<List<RespuestaGetEjemplaresDTO>>(
+                svcProducto.getEjemplares(idProducto), HttpStatus.OK);
     }
 }
