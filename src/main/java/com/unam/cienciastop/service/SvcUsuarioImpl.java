@@ -1,6 +1,7 @@
 package com.unam.cienciastop.service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,8 @@ import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.CarreraDTO;
+import com.unam.cienciastop.dto.TopCincoMesUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
@@ -56,6 +59,34 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     public List<Usuario> getUsuariosActivos() {
         try {
             return repoUsuario.getUsuariosActivos();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Metodo que obtiene las carreras con el numero de usuarios activos.
+     */
+    @Override
+    public List<CarreraDTO> getUsuariosCarrera() {
+        try {
+            return repoUsuario.getUsuariosCarrera();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Metodo que obtiene a los cinco usuarios con mas rentas en el mes.
+     */
+    @Override
+    public List<TopCincoMesUsuariosDTO> getTopCincoUsuariosRentasMes() {
+        try {
+            return repoUsuario.getTopCincoUsuariosRentasMes();
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
         } catch (Exception e) {
