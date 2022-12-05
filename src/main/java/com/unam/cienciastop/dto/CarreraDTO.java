@@ -3,5 +3,5 @@ package com.unam.cienciastop.dto;
 public interface CarreraDTO {
     String getCarrera();
 
-    Long getCount();
+    Long getEstudiantes_Activos();
 }

@@ -8,7 +8,7 @@ public interface TopCincoMesUsuariosDTO {
 
     String getNum_Institucional();
 
-    Long getCount();
+    Long getNumero_Rentas();
 
     Integer getId_Usuario();
 }

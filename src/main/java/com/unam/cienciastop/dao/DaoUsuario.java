@@ -20,13 +20,13 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
      * Metodo que obtiene las carreras con mas usuarios activos.
      * @return Query con las carreras y sus numeros de estudiantes.
      */
-    @Query(value = "SELECT carrera, COUNT(*) FILTER (WHERE activo = true) FROM usuarios GROUP BY carrera ORDER BY count DESC", nativeQuery = true)
+    @Query(value = "SELECT carrera, COUNT(carrera) FILTER (WHERE activo = true) AS estudiantes_activos FROM usuarios GROUP BY carrera ORDER BY estudiantes_activos DESC", nativeQuery = true)
     public List<CarreraDTO> getUsuariosCarrera();
 
     /**
      * Metodo que obtiene a los usuarios con más productos rentados en un mes
      */
-    @Query(value = "SELECT historial_rentas.id_usuario, carrera, nombre, num_institucional, COUNT(historial_rentas.id_usuario) FROM historial_rentas LEFT JOIN usuarios ON historial_rentas.id_usuario = usuarios.id_usuario WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 30 GROUP BY historial_rentas.id_usuario, usuarios.id_usuario ORDER BY count DESC fetch first 5 rows only", nativeQuery = true)
+    @Query(value = "SELECT historial_rentas.id_usuario, carrera, nombre, num_institucional, COUNT(historial_rentas.id_usuario) AS numero_rentas FROM historial_rentas LEFT JOIN usuarios ON historial_rentas.id_usuario = usuarios.id_usuario WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 30 GROUP BY historial_rentas.id_usuario, usuarios.id_usuario ORDER BY numero_rentas DESC fetch first 5 rows only", nativeQuery = true)
     public List<TopCincoMesUsuariosDTO> getTopCincoUsuariosRentasMes();
 
     /**

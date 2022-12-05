@@ -6,5 +6,5 @@ public interface ProductosDeLaSemanaDTO {
 
     String getDescripcion();
 
-    Long getCount();
+    Long getUnidades_Vendidas();
 }
