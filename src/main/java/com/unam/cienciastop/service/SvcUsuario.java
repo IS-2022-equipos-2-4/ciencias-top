@@ -3,7 +3,7 @@ package com.unam.cienciastop.service;
 import java.util.List;
 
 import com.unam.cienciastop.dto.CarreraDTO;
-import com.unam.cienciastop.dto.TopCincoMesUsuariosDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -25,7 +25,7 @@ public interface SvcUsuario {
     /*
      * Metodo que lista los 5 usuarios con mas rentas en el mes.
      */
-    public List<TopCincoMesUsuariosDTO> getTopCincoUsuariosRentasMes();
+    public List<TopCincoSemanaUsuariosDTO> getTopCincoUsuariosRentasSemana();
 
     /*
      * Metodo que recibe un numero institucional y regresa la lista de objetos Usuario asociados a

@@ -22,7 +22,7 @@ import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Usuario;
-import com.unam.cienciastop.dto.ProductosDeLaSemanaDTO;
+import com.unam.cienciastop.dto.ProductosDelMesDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -43,15 +43,15 @@ public class CtrlProducto {
     }
 
     /**
-     * Metodo que despliega los productos mas rentados de la semana.
+     * Metodo que despliega los productos mas rentados del mes.
      * 
-     * @return ResponseEntity<ProductosDeLaSemanaDTO>
+     * @return ResponseEntity<ProductosDelMesDTO>
      */
 
     @Secured({"ROLE_ADMIN"})
-    @GetMapping("/productos/topCincoSemana")
-    public ResponseEntity<List<ProductosDeLaSemanaDTO>> getProductosDeLaSemana() {
-        List<ProductosDeLaSemanaDTO> producto = svcProducto.getProductosDeLaSemana();
+    @GetMapping("/productos/top")
+    public ResponseEntity<List<ProductosDelMesDTO>> getProductosDelMes() {
+        List<ProductosDelMesDTO> producto = svcProducto.getProductosDelMes();
         if (producto != null)
             return new ResponseEntity<>(producto, HttpStatus.OK);
         else

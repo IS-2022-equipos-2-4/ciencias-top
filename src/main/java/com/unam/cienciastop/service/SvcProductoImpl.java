@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoUsuario;
-import com.unam.cienciastop.dto.ProductosDeLaSemanaDTO;
+import com.unam.cienciastop.dto.ProductosDelMesDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.dao.DaoEjemplarProducto;
@@ -69,12 +69,12 @@ public class SvcProductoImpl implements SvcProducto {
     }
 
     /**
-     * Metodo que despliega los productos mas rentados de la semana.
+     * Metodo que despliega los productos mas rentados del mes.
      */
     @Override
-    public List<ProductosDeLaSemanaDTO> getProductosDeLaSemana() {
+    public List<ProductosDelMesDTO> getProductosDelMes() {
         try {
-            return repoProducto.getProductosDeLaSemana();
+            return repoProducto.getProductosDelMes();
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "error en la consulta a la base de datos");

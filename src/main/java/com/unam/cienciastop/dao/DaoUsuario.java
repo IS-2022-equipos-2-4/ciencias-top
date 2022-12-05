@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.unam.cienciastop.dto.CarreraDTO;
-import com.unam.cienciastop.dto.TopCincoMesUsuariosDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.entity.Usuario;
 
 public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
@@ -24,10 +24,10 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     public List<CarreraDTO> getUsuariosCarrera();
 
     /**
-     * Metodo que obtiene a los usuarios con más productos rentados en un mes
+     * Metodo que obtiene a los usuarios con mas productos rentados en la semana
      */
-    @Query(value = "SELECT historial_rentas.id_usuario, carrera, nombre, num_institucional, COUNT(historial_rentas.id_usuario) AS numero_rentas FROM historial_rentas LEFT JOIN usuarios ON historial_rentas.id_usuario = usuarios.id_usuario WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 30 GROUP BY historial_rentas.id_usuario, usuarios.id_usuario ORDER BY numero_rentas DESC fetch first 5 rows only", nativeQuery = true)
-    public List<TopCincoMesUsuariosDTO> getTopCincoUsuariosRentasMes();
+    @Query(value = "SELECT historial_rentas.id_usuario, carrera, nombre, num_institucional, COUNT(historial_rentas.id_usuario) AS numero_rentas FROM historial_rentas LEFT JOIN usuarios ON historial_rentas.id_usuario = usuarios.id_usuario WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 7 GROUP BY historial_rentas.id_usuario, usuarios.id_usuario ORDER BY numero_rentas DESC fetch first 5 rows only", nativeQuery = true)
+    public List<TopCincoSemanaUsuariosDTO> getTopCincoUsuariosRentasSemana();
 
     /**
      * Metodo que recibe un nombre y regresa la lista de objetos

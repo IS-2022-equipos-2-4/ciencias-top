@@ -2,7 +2,7 @@ package com.unam.cienciastop.service;
 
 import java.util.List;
 
-import com.unam.cienciastop.dto.ProductosDeLaSemanaDTO;
+import com.unam.cienciastop.dto.ProductosDelMesDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.entity.EjemplarProducto;
@@ -25,9 +25,9 @@ public interface SvcProducto {
     public List<Producto> getProductos_codigo(String codigo);
 
     /*
-     * Metodo que despliega los productos mas rentados de la semana.
+     * Metodo que despliega los productos mas rentados del mes.
      */
-    public List<ProductosDeLaSemanaDTO> getProductosDeLaSemana();
+    public List<ProductosDelMesDTO> getProductosDelMes();
 
     /**
      * Metodo que recibe un nombre y regresa la lista de objetos 

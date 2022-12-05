@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 
 import com.unam.cienciastop.dto.CarreraDTO;
-import com.unam.cienciastop.dto.TopCincoMesUsuariosDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -57,14 +57,14 @@ public class CtrlUsuario {
     }
 
     /**
-     * Metodo que despliega a los 5 usuarios con mas rentas en el mes.
+     * Metodo que despliega a los 5 usuarios con mas rentas en la semana
      * 
-     * @return ResponseEntity<List<TopCincoMesUsuarios>>
+     * @return ResponseEntity<List<TopCincoSemanaUsuariosDTO>>
      */
     @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios/rentas")
-    public ResponseEntity<List<TopCincoMesUsuariosDTO>> getTopCincoUsuariosRentasMes() {
-        List<TopCincoMesUsuariosDTO> carrera = svcUsuario.getTopCincoUsuariosRentasMes();
+    public ResponseEntity<List<TopCincoSemanaUsuariosDTO>> getTopCincoUsuariosRentasSemana() {
+        List<TopCincoSemanaUsuariosDTO> carrera = svcUsuario.getTopCincoUsuariosRentasSemana();
         if (carrera != null)
             return new ResponseEntity<>(carrera, HttpStatus.OK);
         else

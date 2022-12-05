@@ -17,7 +17,7 @@ import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.dto.CarreraDTO;
-import com.unam.cienciastop.dto.TopCincoMesUsuariosDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
@@ -84,9 +84,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
      * Metodo que obtiene a los cinco usuarios con mas rentas en el mes.
      */
     @Override
-    public List<TopCincoMesUsuariosDTO> getTopCincoUsuariosRentasMes() {
+    public List<TopCincoSemanaUsuariosDTO> getTopCincoUsuariosRentasSemana() {
         try {
-            return repoUsuario.getTopCincoUsuariosRentasMes();
+            return repoUsuario.getTopCincoUsuariosRentasSemana();
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
         } catch (Exception e) {

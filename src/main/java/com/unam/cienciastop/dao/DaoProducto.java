@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.unam.cienciastop.dto.ProductosDeLaSemanaDTO;
+import com.unam.cienciastop.dto.ProductosDelMesDTO;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Usuario;
 
@@ -21,11 +21,11 @@ public interface DaoProducto extends CrudRepository<Producto,Integer>{
     public Producto getProducto_id(@Param("id_producto") Integer id_producto);
 
     /**
-     * Metodo que despliega los productos mas rentados de la semana
-     * @return List<ProductosDeLaSemanaDTO>
+     * Metodo que despliega los productos mas rentados del mes.
+     * @return List<ProductosDelMesDTO>
      */
-    @Query(value = "SELECT nombre, descripcion, COUNT(nombre) AS unidades_vendidas FROM historial_rentas LEFT JOIN ejemplar_productos ON historial_rentas.id_ejemplar = ejemplar_productos.id_ejemplar LEFT JOIN productos ON ejemplar_productos.id_producto = productos.id_producto WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 7 GROUP BY nombre, descripcion ORDER BY unidades_vendidas DESC fetch first 5 rows only", nativeQuery = true)
-    public List<ProductosDeLaSemanaDTO> getProductosDeLaSemana();
+    @Query(value = "SELECT nombre, descripcion, COUNT(nombre) AS unidades_vendidas FROM historial_rentas LEFT JOIN ejemplar_productos ON historial_rentas.id_ejemplar = ejemplar_productos.id_ejemplar LEFT JOIN productos ON ejemplar_productos.id_producto = productos.id_producto WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 30 GROUP BY nombre, descripcion ORDER BY unidades_vendidas DESC fetch first 5 rows only", nativeQuery = true)
+    public List<ProductosDelMesDTO> getProductosDelMes();
     
     /** 
      * Metodo que recibe un nombre y regresa la lista de objetos 
