@@ -14,7 +14,7 @@ public class ProductoDTO {
     @NotNull(message = "Por favor, ingrese un nombre")
     private String nombre;
 
-    //@NotNull(message = "Por favor, ingrese una descripción")
+    @NotNull(message = "Por favor, ingrese una descripción")
     private String descripcion;
 
     @Min(value = 0, message = "Aprecio la caridad, pero el costo es positivo")
