@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 
 import com.unam.cienciastop.dto.UsuarioDTO;
@@ -40,15 +41,13 @@ public class CtrlUsuario {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
     }
     
+
     @Secured({"ROLE_USER", "ROLE_ADMIN","ROLE_PROVIDER"})
-    @GetMapping("/usuarios/perfil/{id_usuario}")
-    public ResponseEntity<Usuario> getPerfil(@PathVariable(value = "id_usuario") Integer idUsuario) {
-       Usuario usuario=svcUsuario.getPerfil(idUsuario);
-       if (usuario!=null)
-          return new ResponseEntity<>(usuario, HttpStatus.OK);
-       else
-          throw new ApiException(HttpStatus.NOT_FOUND, 
-                    "Ocurrio un error, el usuario con ese id no existe");
+    @GetMapping("/usuarios/perfil")
+    public ResponseEntity<Usuario> getPerfil(@AuthenticationPrincipal String numInstitucional) {
+       //Usuario usuario=svcUsuario.getPerfil(idUsuario);
+    
+          return new ResponseEntity<Usuario>(svcUsuario.getPerfil(numInstitucional), HttpStatus.OK);
 
     }
     /**

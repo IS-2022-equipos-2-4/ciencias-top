@@ -258,8 +258,8 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     //Preguntar a Jasso sobre la etiqueta Transactional y la carpeta Dto
     @Override
     @Transactional(readOnly=true)
-    public Usuario getPerfil(Integer id) {
-        Usuario usuario= repoUsuario.findById(id).get();
+    public Usuario getPerfil(String numInstitucional) {
+        Usuario usuario= repoUsuario.findByNumInstitucional(numInstitucional);
         /*Pumapuntos pumapuntos=(Pumapuntos) repoPumapuntos.getPumapuntos(id);
         List<HistorialRentas> historialRentas=(List<HistorialRentas>) repoHistorialRentas.rentasByIdUsuario(id);
 
