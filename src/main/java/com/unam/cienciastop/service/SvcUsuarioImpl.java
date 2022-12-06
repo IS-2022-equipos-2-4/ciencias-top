@@ -258,9 +258,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     //Preguntar a Jasso sobre la etiqueta Transactional y la carpeta Dto
     @Override
     @Transactional(readOnly=true)
-    public String[] getPerfil(Integer id) {
-        Usuario usuario=(Usuario) repoUsuario.findById(id).get();
-        Pumapuntos pumapuntos=(Pumapuntos) repoPumapuntos.getPumapuntos(id);
+    public Usuario getPerfil(Integer id) {
+        Usuario usuario= repoUsuario.findById(id).get();
+        /*Pumapuntos pumapuntos=(Pumapuntos) repoPumapuntos.getPumapuntos(id);
         List<HistorialRentas> historialRentas=(List<HistorialRentas>) repoHistorialRentas.rentasByIdUsuario(id);
 
         String[] atributos=new String[9];
@@ -302,7 +302,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
                 productos_no_devueltos+=p.getNombre();
               else
                 productos_no_devueltos+=p.getNombre()+",";
-            }
+            //}
         }
         
         if (productos_no_devueltos=="")
@@ -320,8 +320,10 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         }
 
         atributos[8]=roles;
-        return atributos;
+        return atributos;*/
 
 
+    //}
+    return usuario;
     }
 }

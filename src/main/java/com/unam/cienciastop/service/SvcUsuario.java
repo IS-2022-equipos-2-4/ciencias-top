@@ -34,5 +34,5 @@ public interface SvcUsuario {
 
     public Usuario getUsuario_id(Integer id);
 
-    public String[] getPerfil(Integer id); 
+    public Usuario getPerfil(Integer id); 
 }
