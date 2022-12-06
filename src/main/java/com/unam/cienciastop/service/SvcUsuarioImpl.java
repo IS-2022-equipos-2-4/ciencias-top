@@ -1,5 +1,6 @@
 package com.unam.cienciastop.service;
 
+import java.io.Console;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,9 +84,16 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     public Usuario deleteUsuario(Integer id_usuario){
         
         // revisa si el usuario existe
-        Usuario usuario = repoUsuario.findById(id_usuario).get();
-                // .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
-                //         "error, no se puede modificar un usuario inexistente."));        
+        Usuario usuario = repoUsuario.findById(id_usuario)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                        "error, no se puede modificar un usuario inexistente."));        
+
+        // toDo: revisa si el usuario es el usuario activo        
+
+        // revisa si es el usuario 999999999
+        if(usuario.getNumInstitucional().equals("999999999") ){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Este usuario no se puede eliminar");
+        }
 
         // revisa si el usuario es proveedor, si es así, revisa si tiene productos registrados
         if (usuario.getEsProveedor()) {
@@ -111,7 +119,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         usuario.setActivo(false);
         // guarda los cambios en la BD
         try {
-            repoUsuario.save(usuario);        //todo guardar en la base de datos
+            repoUsuario.save(usuario);        
             return usuario;
         } catch (DataIntegrityViolationException e) {
             throw new ApiException(HttpStatus.NOT_FOUND,
@@ -206,13 +214,13 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
-    }
+    } 
 
     @Override
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDto) {
         Usuario usuario = repoUsuario.findById(id_usuario)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
-                        "error, no se puede modificar un usuario inexistente."));
+                        "Error, no se puede modificar un usuario inexistente."));
 
         List<Role> roles = usuario.getRoles();
 
