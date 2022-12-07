@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
+import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.entity.EjemplarProducto;
+import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Producto;
 
 public interface SvcProducto {
@@ -34,7 +36,19 @@ public interface SvcProducto {
 
     public EjemplarProducto rentarProducto(Integer idProducto, String numInstitucionalUsuario);
 
-    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar, String numInstitucionalUsuario);
 
     public Producto editarProducto(Integer id_producto, ProductoDTO productodto);
+    
+    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar);
+
+    /**
+     * Metodo que recibe un idEjemplar y regresa la lista de objetos 
+     * HistorialRentas asociado a dicho idEjemplar.
+     * 
+     * @param idEjemplar
+     * @return List<HistorialRentas>
+     */
+    public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario);
+
+    public List<RespuestaGetEjemplaresDTO> getEjemplares(Integer idProducto);
 }
