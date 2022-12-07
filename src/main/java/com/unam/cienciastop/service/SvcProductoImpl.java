@@ -257,11 +257,16 @@ public class SvcProductoImpl implements SvcProducto {
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 
                 "error, no se puede editar un producto que no existe."));
 
+        List<Producto> codigoRepetido = repoProducto.getProductos_codigo(productodto.getCodigo());
+        for (Producto p : codigoRepetido)
+            if (p != null)
+                throw new ApiException(HttpStatus.BAD_REQUEST, 
+                    "error, cada código debe ser único para cada producto");
+
         prod.setCodigo(productodto.getCodigo());
         prod.setNombre(productodto.getNombre());
         prod.setDescripcion(productodto.getDescripcion());
         prod.setCosto(productodto.getCosto());
-        prod.setStock(productodto.getStock());
         prod.setLimitePrestamo(productodto.getLimitePrestamo());
 
         try {
@@ -270,7 +275,7 @@ public class SvcProductoImpl implements SvcProducto {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                 "error al consultar la base de datos");
         } catch (Exception e) {
-            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
         }
         
         return prod;
