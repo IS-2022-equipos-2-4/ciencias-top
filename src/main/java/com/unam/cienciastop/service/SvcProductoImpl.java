@@ -263,7 +263,7 @@ public class SvcProductoImpl implements SvcProducto {
         for (Producto p : codigoRepetido)
             if (p != null)
                 throw new ApiException(HttpStatus.BAD_REQUEST, 
-                    "error, cada código debe ser único para cada producto");
+                    "error, si editaste el producto debes cambiar el código");
 
         prod.setCodigo(productodto.getCodigo());
         prod.setNombre(productodto.getNombre());
