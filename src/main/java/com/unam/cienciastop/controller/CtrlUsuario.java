@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 
 import com.unam.cienciastop.dto.UsuarioDTO;
@@ -128,10 +129,10 @@ public class CtrlUsuario {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/usuarios/eliminar/{id_usuario}+{requester_ID}")
+    @PostMapping("/usuarios/eliminar/{id_usuario}")
     public ResponseEntity<Usuario> eliminarUsuario(
             @PathVariable(value = "id_usuario") Integer id_usuario,
-            @PathVariable(value = "requester_ID") Integer requester_ID) {
-        return new ResponseEntity<Usuario>(svcUsuario.deleteUsuario(id_usuario,requester_ID), HttpStatus.OK);
+            @AuthenticationPrincipal String numInstitucionalUsuario) {
+        return new ResponseEntity<Usuario>(svcUsuario.deleteUsuario(id_usuario,numInstitucionalUsuario), HttpStatus.OK);
     }
 }

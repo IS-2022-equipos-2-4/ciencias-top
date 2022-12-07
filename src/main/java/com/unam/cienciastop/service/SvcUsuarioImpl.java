@@ -48,6 +48,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     private DaoUsuario repoUsuario;
 
     @Autowired
+    private SvcUsuario svcUsuario;
+
+    @Autowired
     private DaoProducto repoProducto;
 
     @Autowired
@@ -80,8 +83,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
      * Método que marca a un usuario como inactivo en la BD.
      */   
     @Override    
-    public Usuario deleteUsuario(Integer id_usuario, Integer requester_ID){
-        
+    public Usuario deleteUsuario(Integer id_usuario, String numInstitucionalUsuario){
+        Usuario requester = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
+        Integer requester_ID = requester.getId();
         // revisa si el usuario existe
         Usuario usuario = repoUsuario.findById(id_usuario)
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
@@ -91,11 +95,6 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         if(requester_ID == id_usuario){
             throw new ApiException(HttpStatus.BAD_REQUEST, "No puedes eliminar tu propio usuario");
         }
-        
-        // revisa si es el usuario 999999999
-        if(usuario.getNumInstitucional().equals("999999999") ){
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Este usuario no se puede eliminar");
-        }
 
         // revisa si el usuario es proveedor, si es así, revisa si tiene productos registrados
         if (usuario.getEsProveedor()) {
@@ -103,7 +102,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
             if (productosProveedor.size() != 0 || productosProveedor == null){
                 throw new ApiException(HttpStatus.NOT_FOUND, 
                     "Imposible eliminar el usuario. El usuario tiene productos registrados");            
-            }    
+            }
         }        
 
         // revisa si el usuario tiene productos rentados sin regresar
