@@ -259,12 +259,6 @@ public class SvcProductoImpl implements SvcProducto {
             .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 
                 "error, no se puede editar un producto que no existe."));
 
-        List<Producto> codigoRepetido = repoProducto.getProductos_codigo(productodto.getCodigo());
-        for (Producto p : codigoRepetido)
-            if (p != null)
-                throw new ApiException(HttpStatus.BAD_REQUEST, 
-                    "error, si editaste el producto debes cambiar el código");
-
         prod.setCodigo(productodto.getCodigo());
         prod.setNombre(productodto.getNombre());
         prod.setDescripcion(productodto.getDescripcion());
