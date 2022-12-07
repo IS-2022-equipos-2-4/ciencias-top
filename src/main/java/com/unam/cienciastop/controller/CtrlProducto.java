@@ -23,6 +23,7 @@ import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.dto.ProductosDelMesDTO;
+import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -125,6 +126,20 @@ public class CtrlProducto {
         return new ResponseEntity<>(svcProducto.crearProducto(producto, idProveedor),
                 HttpStatus.CREATED);
     }
+
+    @Secured({"ROLE_ADMIN", "ROLE_PROVIDER"})
+    @PostMapping("/productos/editar/{id_producto}")
+    public ResponseEntity<Producto> editarProducto(
+            @PathVariable(value = "id_producto") Integer id_producto,
+            @Valid @RequestBody ProductoDTO productodto,
+            BindingResult bindingRes) {
+        if (bindingRes.hasErrors()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, 
+                    bindingRes.getAllErrors().get(0).getDefaultMessage());
+        }
+        return new ResponseEntity<Producto>(svcProducto.editarProducto(id_producto, productodto), HttpStatus.OK);
+    }
+
 
     @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
     @PostMapping("/productos/{id_producto}/rentar")

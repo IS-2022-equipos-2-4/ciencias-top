@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoUsuario;
 import com.unam.cienciastop.dto.ProductosDelMesDTO;
+import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.dao.DaoEjemplarProducto;
@@ -268,6 +269,31 @@ public class SvcProductoImpl implements SvcProducto {
         return new RespuestaDevolverEjemplarDTO(devolucionTardia);
     }
 
+    @Override
+    public Producto editarProducto(Integer id_producto, ProductoDTO productodto) {
+        Producto prod = repoProducto.findById(id_producto)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 
+                "error, no se puede editar un producto que no existe."));
+
+        prod.setCodigo(productodto.getCodigo());
+        prod.setNombre(productodto.getNombre());
+        prod.setDescripcion(productodto.getDescripcion());
+        prod.setCosto(productodto.getCosto());
+        prod.setStock(productodto.getStock());
+        prod.setLimitePrestamo(productodto.getLimitePrestamo());
+
+        try {
+            repoProducto.save(prod);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "error al consultar la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+        
+        return prod;
+    }
+    
     /**
      * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos HistorialRentas
      * asociado a dicho idEjemplar.

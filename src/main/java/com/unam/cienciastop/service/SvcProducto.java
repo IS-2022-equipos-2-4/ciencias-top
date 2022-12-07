@@ -3,6 +3,7 @@ package com.unam.cienciastop.service;
 import java.util.List;
 
 import com.unam.cienciastop.dto.ProductosDelMesDTO;
+import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.entity.EjemplarProducto;
@@ -41,6 +42,9 @@ public interface SvcProducto {
 
     public EjemplarProducto rentarProducto(Integer idProducto, String numInstitucionalUsuario);
 
+
+    public Producto editarProducto(Integer id_producto, ProductoDTO productodto);
+    
     public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar);
 
     /**

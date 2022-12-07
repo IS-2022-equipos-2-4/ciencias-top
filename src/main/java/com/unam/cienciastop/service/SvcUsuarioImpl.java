@@ -242,6 +242,10 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
             usuario.setEsProveedor(false);
         } 
 
+        usuario.setNombre(usuarioDto.getNombre());
+        usuario.setCorreo(usuarioDto.getCorreo());
+        usuario.setTelefono(usuarioDto.getTelefono());
+
         try {
             repoUsuario.save(usuario);
         } catch (DataAccessException e) {
