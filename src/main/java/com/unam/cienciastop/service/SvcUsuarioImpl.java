@@ -80,16 +80,18 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
      * Método que marca a un usuario como inactivo en la BD.
      */   
     @Override    
-    // @Transactional
-    public Usuario deleteUsuario(Integer id_usuario){
+    public Usuario deleteUsuario(Integer id_usuario, Integer requester_ID){
         
         // revisa si el usuario existe
         Usuario usuario = repoUsuario.findById(id_usuario)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
-                        "error, no se puede modificar un usuario inexistente."));        
-
-        // toDo: revisa si el usuario es el usuario activo        
-
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                "error, no se puede modificar un usuario inexistente."));
+        
+        // revisa si el usuario es el usuario activo        
+        if(requester_ID == id_usuario){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "No puedes eliminar tu propio usuario");
+        }
+        
         // revisa si es el usuario 999999999
         if(usuario.getNumInstitucional().equals("999999999") ){
             throw new ApiException(HttpStatus.BAD_REQUEST, "Este usuario no se puede eliminar");

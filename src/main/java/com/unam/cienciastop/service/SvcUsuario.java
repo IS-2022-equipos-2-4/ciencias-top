@@ -39,5 +39,5 @@ public interface SvcUsuario {
      * @param id_usuario
      * @return Usuario
      */
-    public Usuario deleteUsuario(Integer id_usuario);
+    public Usuario deleteUsuario(Integer id_usuario, Integer requester_ID);
 }
