@@ -21,9 +21,6 @@ public class ProductoDTO {
     @NotNull(message = "Por favor, ingrese un costo")
     private Integer costo;
 
-    @NotNull(message = "Por favor, ingrese un número de stock")
-    private Integer stock;
-
     @Min(value = 3, message = "El limite debe ser entre 3 y 7 días, por favor")
     @Max(value = 7, message = "El limite debe ser entre 3 y 7 días, por favor")
     @NotNull(message = "Por favor, ingrese un limite de días de prestamo")
@@ -59,14 +56,6 @@ public class ProductoDTO {
 
     public void setCosto(Integer costo) {
         this.costo = costo;
-    }
-
-    public Integer getStock() {
-        return this.stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
     }
 
     public Integer getLimitePrestamo() {

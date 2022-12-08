@@ -279,7 +279,6 @@ public class SvcProductoImpl implements SvcProducto {
         prod.setNombre(productodto.getNombre());
         prod.setDescripcion(productodto.getDescripcion());
         prod.setCosto(productodto.getCosto());
-        prod.setStock(productodto.getStock());
         prod.setLimitePrestamo(productodto.getLimitePrestamo());
 
         try {
@@ -288,7 +287,7 @@ public class SvcProductoImpl implements SvcProducto {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                 "error al consultar la base de datos");
         } catch (Exception e) {
-            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
         }
         
         return prod;
