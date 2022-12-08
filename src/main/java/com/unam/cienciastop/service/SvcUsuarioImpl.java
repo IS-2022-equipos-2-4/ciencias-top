@@ -221,7 +221,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "error en la consulta a la base de datos");
         } catch (Exception e) {
-            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
         }
         
         return usuario;
