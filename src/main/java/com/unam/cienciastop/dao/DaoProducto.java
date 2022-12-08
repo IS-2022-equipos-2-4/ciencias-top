@@ -24,7 +24,7 @@ public interface DaoProducto extends CrudRepository<Producto,Integer>{
      * Metodo que despliega los productos mas rentados del mes.
      * @return List<ProductosDelMesDTO>
      */
-    @Query(value = "SELECT nombre, descripcion, COUNT(nombre) AS unidades_vendidas FROM historial_rentas LEFT JOIN ejemplar_productos ON historial_rentas.id_ejemplar = ejemplar_productos.id_ejemplar LEFT JOIN productos ON ejemplar_productos.id_producto = productos.id_producto WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 30 GROUP BY nombre, descripcion ORDER BY unidades_vendidas DESC fetch first 5 rows only", nativeQuery = true)
+    @Query(value = "SELECT productos.id_producto, codigo, nombre, descripcion, COUNT(nombre) AS unidades_rentadas FROM historial_rentas LEFT JOIN ejemplar_productos ON historial_rentas.id_ejemplar = ejemplar_productos.id_ejemplar LEFT JOIN productos ON ejemplar_productos.id_producto = productos.id_producto WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 30 GROUP BY productos.id_producto, nombre, descripcion ORDER BY unidades_rentadas DESC fetch first 5 rows only", nativeQuery = true)
     public List<ProductosDelMesDTO> getProductosDelMes();
     
     /** 
