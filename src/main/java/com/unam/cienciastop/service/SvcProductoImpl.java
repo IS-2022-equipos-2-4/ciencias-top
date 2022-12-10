@@ -262,16 +262,14 @@ public class SvcProductoImpl implements SvcProducto {
      */
     @Override
     public void eliminarProducto(Integer idProducto, String numInstitucionalUsuario){
-        Producto producto = this.repoProducto.findById(idProducto).get();
-        
-        if (producto == null) {
-            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
-                    "no existe un producto con el id especificado");
-        }
+        Producto producto = this.repoProducto.findById(idProducto).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+        "no existe un producto con el id especificado"));
 
         List<EjemplarProducto> ejemplaresDisponibles =
                 this.repoEjemplarProducto.getEjemplaresDisponiblesByIdProducto(idProducto);
-        if(ejemplaresDisponibles.size()<producto.getStock()){
+        List<EjemplarProducto> ejemplaresTotales =
+        this.repoEjemplarProducto.getEjemplaresByIdProducto(idProducto);
+        if(ejemplaresDisponibles.size() < ejemplaresTotales.size()){
             throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
                     "no se puede elimiinar el producto, tiene ejemplares rentados");
         }

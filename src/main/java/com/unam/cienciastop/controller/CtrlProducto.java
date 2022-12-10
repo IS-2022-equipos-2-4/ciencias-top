@@ -156,11 +156,11 @@ public class CtrlProducto {
      */
     @Secured({"ROLE_ADMIN", "ROLE_PROVIDER"})
     @DeleteMapping("/productos/{id_producto}")
-    public ResponseEntity eliminarProducto(
+    public ResponseEntity<HttpStatus> eliminarProducto(
         @PathVariable (value ="id_producto") Integer idProducto,
         @AuthenticationPrincipal String numInstitucionalUsuario){
             svcProducto.eliminarProducto(idProducto, numInstitucionalUsuario);
-            return ResponseEntity.ok().build();
+            return new ResponseEntity<HttpStatus>(HttpStatus.OK);
     }
 
     /**
