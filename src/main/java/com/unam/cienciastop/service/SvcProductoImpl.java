@@ -2,8 +2,10 @@ package com.unam.cienciastop.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
+import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.dao.DaoEjemplarProducto;
 import com.unam.cienciastop.dao.DaoHistorialRentas;
 import com.unam.cienciastop.dao.DaoProducto;
@@ -199,28 +203,23 @@ public class SvcProductoImpl implements SvcProducto {
     }
 
     @Override
-    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar,
-            String numInstitucionalUsuario) {
-        Usuario usuario = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
-        Integer idUsuario = usuario.getId();
-
+    public RespuestaDevolverEjemplarDTO devolverEjemplar(Integer idEjemplar) {
         Optional<EjemplarProducto> maybeEjemplar = this.repoEjemplarProducto.findById(idEjemplar);
 
         if (!maybeEjemplar.isPresent()) {
             throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
                     "no existe el ejemplar que se quiere devolver");
         }
-        EjemplarProducto ejemplar = maybeEjemplar.get();
 
-        List<HistorialRentas> rentas = this.repoHistorialRentas.rentasByIdUsuario(idUsuario);
+        List<HistorialRentas> rentas = this.repoHistorialRentas.rentasByIdEjemplar(idEjemplar);
+
         Optional<HistorialRentas> maybeRenta = rentas.stream().filter(renta -> {
-            return renta.getItemProducto().getIdEjemplar() == idEjemplar
-                    && ! renta.getDevuelto();
+            return renta.getItemProducto().getIdEjemplar() == idEjemplar && !renta.getDevuelto();
         }).findAny();
 
         if (!maybeRenta.isPresent()) {
             throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
-                    "no tienes rentado actualmente este ejemplar");
+                    "este ejemplar no está rentado actualmente");
         }
 
         LocalDate fechaActual = LocalDate.now();
@@ -230,12 +229,16 @@ public class SvcProductoImpl implements SvcProducto {
         renta.setDevuelto(true);
         repoHistorialRentas.save(renta);
 
+        Usuario usuario = renta.getUsuario();
+        Integer idUsuario = usuario.getId();
+
+        EjemplarProducto ejemplar = maybeEjemplar.get();
+        ejemplar.setDisponible(true);
+        repoEjemplarProducto.save(ejemplar);
+
         Producto producto = ejemplar.getProducto();
         producto.setStock(producto.getStock() + 1);
         repoProducto.save(producto);
-
-        ejemplar.setDisponible(true);
-        repoEjemplarProducto.save(ejemplar);
 
         boolean devolucionTardia = false;
         if (ChronoUnit.DAYS.between(renta.getFechaRenta(), fechaActual) > producto
@@ -248,5 +251,90 @@ public class SvcProductoImpl implements SvcProducto {
         }
 
         return new RespuestaDevolverEjemplarDTO(devolucionTardia);
+    }
+
+    @Override
+    public Producto editarProducto(Integer id_producto, ProductoDTO productodto) {
+        Producto prod = repoProducto.findById(id_producto)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 
+                "error, no se puede editar un producto que no existe."));
+
+        prod.setCodigo(productodto.getCodigo());
+        prod.setNombre(productodto.getNombre());
+        prod.setDescripcion(productodto.getDescripcion());
+        prod.setCosto(productodto.getCosto());
+        prod.setLimitePrestamo(productodto.getLimitePrestamo());
+
+        try {
+            repoProducto.save(prod);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "error al consultar la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
+        }
+        
+        return prod;
+    }
+    
+    /**
+     * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos HistorialRentas
+     * asociado a dicho idEjemplar.
+     * 
+     * @param numInstitucionalUsuario
+     * @return List<HistorialRentas>
+     */
+    @Override
+    public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario) {
+        Usuario usuario = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
+        Integer idUsuario = usuario.getId();
+        try {
+            return repoHistorialRentas.rentasByIdUsuario(idUsuario);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public List<RespuestaGetEjemplaresDTO> getEjemplares(Integer idProducto) {
+        Optional<Producto> maybeProducto = this.repoProducto.findById(idProducto);
+
+        if (!maybeProducto.isPresent()) {
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE, "no existe este producto");
+        }
+        List<HistorialRentas> rentas = new ArrayList<HistorialRentas>();
+        this.repoHistorialRentas.findAll().forEach(rentas::add);
+
+        List<EjemplarProducto> ejemplares =
+                this.repoEjemplarProducto.getEjemplaresByIdProducto(idProducto);
+
+        List<RespuestaGetEjemplaresDTO> respuesta = ejemplares.stream().map(ejemplar -> {
+            Integer idEjemplar = ejemplar.getIdEjemplar();
+
+            RespuestaGetEjemplaresDTO respuestaGetEjemplaresDTO = new RespuestaGetEjemplaresDTO();
+            respuestaGetEjemplaresDTO.idEjemplar = idEjemplar;
+
+            Optional<HistorialRentas> maybeRenta = rentas.stream().filter(renta -> {
+                return renta.getItemProducto().getIdEjemplar() == idEjemplar
+                        && !renta.getDevuelto();
+            }).findAny();
+
+            respuestaGetEjemplaresDTO.rentado = false;
+            if (maybeRenta.isPresent()) {
+                HistorialRentas renta = maybeRenta.get();
+
+                respuestaGetEjemplaresDTO.fecha_renta = renta.getFechaRenta();
+                respuestaGetEjemplaresDTO.numInstitucionalUsuario =
+                        renta.getUsuario().getNumInstitucional();
+                respuestaGetEjemplaresDTO.rentado = true;
+            }
+
+            return respuestaGetEjemplaresDTO;
+        }).collect(Collectors.toList());
+
+        return respuesta;
     }
 }
