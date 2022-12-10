@@ -1,7 +1,9 @@
 package com.unam.cienciastop.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.unam.cienciastop.dto.ConteoDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -33,4 +35,6 @@ public interface SvcUsuario {
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDTO);
 
     public Usuario getUsuario_id(Integer id);
+
+    List<Usuario> getUsuariosInactivos();
 }

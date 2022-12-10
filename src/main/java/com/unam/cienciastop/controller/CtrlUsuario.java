@@ -1,6 +1,7 @@
 package com.unam.cienciastop.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 
-
+import com.unam.cienciastop.dto.ConteoDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -37,6 +38,12 @@ public class CtrlUsuario {
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> getUsuariosActivos() {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuariosInactivos")
+    public ResponseEntity<List<Usuario>> getUsuariosInactivos() {
+        return new ResponseEntity<>(svcUsuario.getUsuariosInactivos(), HttpStatus.OK);
     }
 
     /**
@@ -124,5 +131,9 @@ public class CtrlUsuario {
                     bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
         return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
+    }
+
+    public ResponseEntity<Integer> numCuentasInactivas(){
+        return new ResponseEntity<Integer>(2,HttpStatus.OK);
     }
 }

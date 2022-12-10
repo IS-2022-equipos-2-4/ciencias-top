@@ -16,4 +16,5 @@ public interface DaoHistorialRentas extends CrudRepository<HistorialRentas,Integ
      */
     @Query(value = "SELECT * FROM historial_rentas WHERE id_usuario = :id_usuario", nativeQuery = true)
     public List<HistorialRentas> rentasByIdUsuario(@Param("id_usuario") Integer id_usuario);
+
 }
