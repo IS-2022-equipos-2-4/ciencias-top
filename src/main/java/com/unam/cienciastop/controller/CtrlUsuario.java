@@ -13,18 +13,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 
-import com.unam.cienciastop.dto.ConteoDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcUsuario;
-import com.unam.cienciastop.service.SvcUsuarioImpl;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -40,6 +37,11 @@ public class CtrlUsuario {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
     }
 
+    /**
+     * Metodo que define un endpoint que regresa los usuarios inactivos
+     * 
+     * @return ResponseEntity<List<Usuario>>
+     */
     @Secured("ROLE_ADMIN")
     @GetMapping("/usuariosInactivos")
     public ResponseEntity<List<Usuario>> getUsuariosInactivos() {
@@ -133,7 +135,7 @@ public class CtrlUsuario {
         return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
     }
 
-    public ResponseEntity<Integer> numCuentasInactivas(){
-        return new ResponseEntity<Integer>(2,HttpStatus.OK);
-    }
+    public ResponseEntity<List<Usuario>> getUsuariosConMasDevoluciones(){
+        return new ResponseEntity<>(svcUsuario.getUsuariosConMasDevoluciones() ,HttpStatus.OK);
+    }    
 }
