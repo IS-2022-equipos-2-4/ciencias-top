@@ -33,4 +33,6 @@ public interface SvcUsuario {
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDTO);
 
     public Usuario getUsuario_id(Integer id);
+
+    public void editarContraseña(String num_institucional, String contraseña);
 }
