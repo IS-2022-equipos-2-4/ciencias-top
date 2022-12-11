@@ -260,6 +260,6 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
     @Override
     public List<Usuario> getUsuariosConMasDevoluciones() {
-        return null;
+        return repoUsuario.getUsuariosConMasDevoluciones();
     }
 }

@@ -50,5 +50,12 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     @Query(value = "SELECT * FROM usuarios WHERE POSITION (:correo IN correo)>0", nativeQuery = true)
     public List<Usuario> getUsuarios_correo(@Param("correo") String correo);
 
+    @Query(value = "SELECT b.*,COUNT(*)" +
+                    "FROM historial_rentas a LEFT JOIN usuarios b ON a.id_usuario = b.id_usuario " +
+                    "WHERE a.devuelto = true" +
+                    "GROUP BY b.id_usuario ORDER BY count DESC LIMIT 10;", 
+                nativeQuery=true)
+    public List<Usuario> getUsuariosConMasDevoluciones();
+
     Usuario findByNumInstitucional(String numInstitucional);
 }
