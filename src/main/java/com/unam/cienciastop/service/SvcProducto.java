@@ -51,4 +51,6 @@ public interface SvcProducto {
     public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario);
 
     public List<RespuestaGetEjemplaresDTO> getEjemplares(Integer idProducto);
+
+    public List<Producto> getProductosMenorCosto();
 }

@@ -337,4 +337,9 @@ public class SvcProductoImpl implements SvcProducto {
 
         return respuesta;
     }
+
+    @Override
+    public List<Producto> getProductosMenorCosto() {
+        return repoProducto.getProductosMenorCosto();
+    }
 }
