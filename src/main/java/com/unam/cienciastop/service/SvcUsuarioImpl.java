@@ -1,5 +1,6 @@
 package com.unam.cienciastop.service;
 
+import java.io.Console;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoHistorialRentas;
@@ -106,6 +108,60 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
                         "error, no se puede obtener un usuario inexistente."));
     };
 
+    /**
+     * Método que marca a un usuario como inactivo en la BD.
+     */   
+    @Override    
+    public Usuario deleteUsuario(Integer id_usuario, String numInstitucionalUsuario){
+        Usuario requester = findByNumInstitucional(numInstitucionalUsuario);
+        Integer requester_ID = requester.getId();
+        // revisa si el usuario existe
+        Usuario usuario = repoUsuario.findById(id_usuario)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                "error, no se puede modificar un usuario inexistente."));
+        
+        // revisa si el usuario es el usuario activo        
+        if(requester_ID == id_usuario){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "No puedes eliminar tu propio usuario");
+        }
+
+        // revisa si el usuario es proveedor, si es así, revisa si tiene productos registrados
+        if (usuario.getEsProveedor()) {
+            List<Producto> productosProveedor = repoProducto.findByProveedor(usuario);
+            if (productosProveedor.size() != 0 || productosProveedor == null){
+                throw new ApiException(HttpStatus.NOT_FOUND, 
+                    "Imposible eliminar el usuario. El usuario tiene productos registrados");            
+            }
+        }        
+
+        // revisa si el usuario tiene productos rentados sin regresar
+        List<HistorialRentas> productosRentados = repoHistorialRentas.rentasByIdUsuario(id_usuario);
+        if (productosRentados.size() != 0){
+            for (HistorialRentas producto : productosRentados) {
+                if (producto.getDevuelto() == false) {
+                    throw new ApiException(HttpStatus.NOT_FOUND, 
+                            "Imposible eliminar el usuario. El usuario tiene adeudos");    
+                }       
+            }       
+        }
+            
+        // establece el estado del usuario como 'no activo'
+        usuario.setActivo(false);
+        // guarda los cambios en la BD
+        try {
+            repoUsuario.save(usuario);        
+            return usuario;
+        } catch (DataIntegrityViolationException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "error, ya hay un usuario registrado con ese correo o no. cuenta / trabajador");
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getLocalizedMessage());
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }      
+    }
+
     /*
      * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.
      */
@@ -188,13 +244,13 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
-    }
+    } 
 
     @Override
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDto) {
         Usuario usuario = repoUsuario.findById(id_usuario)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
-                        "error, no se puede modificar un usuario inexistente."));
+                        "Error, no se puede modificar un usuario inexistente."));
 
         List<Role> roles = usuario.getRoles();
 

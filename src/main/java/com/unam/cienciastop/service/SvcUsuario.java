@@ -46,5 +46,12 @@ public interface SvcUsuario {
 
     public Usuario getUsuario_id(Integer id);
 
+    /**
+     * Método que marca un usuario como inactivo
+     * @param id_usuario
+     * @return Usuario
+     */
+    public Usuario deleteUsuario(Integer id_usuario, String numInstitucionalUsuario);
+
     public Usuario getPerfil(String numInstitucional);; 
 }
