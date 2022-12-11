@@ -357,75 +357,11 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         return repoUsuario.getUsuariosConMasDevolucionesTardias();
     }
     
-    //Preguntar a Jasso sobre la etiqueta Transactional y la carpeta Dto
     @Override
     @Transactional(readOnly=true)
     public Usuario getPerfil(String numInstitucional) {
         Usuario usuario= repoUsuario.findByNumInstitucional(numInstitucional);
-        /*Pumapuntos pumapuntos=(Pumapuntos) repoPumapuntos.getPumapuntos(id);
-        List<HistorialRentas> historialRentas=(List<HistorialRentas>) repoHistorialRentas.rentasByIdUsuario(id);
 
-        String[] atributos=new String[9];
-        atributos[0]=usuario.getNombre();
-        atributos[1]=usuario.getCorreo();
-        atributos[2]=usuario.getNumInstitucional();
-        atributos[3]=usuario.getCarrera();
-        atributos[4]=usuario.getTelefono();
-        
-        atributos[5]=pumapuntos.getSaldo().toString();
-        //aqui iria el get productos rentados
-        String productosRentados="";
-        if(historialRentas.size()==0)
-           productosRentados="No hay productos rentados";
-        else   
-          for (int i=0; i<historialRentas.size();i++){
-           
-              HistorialRentas r=historialRentas.get(i);
-              EjemplarProducto e=r.getItemProducto();
-              Producto p=e.getProducto();
-              if(i==historialRentas.size()-1)
-                productosRentados+=p.getNombre();
-              else
-                productosRentados+=p.getNombre()+",";
-          }
-
-        atributos[6]=productosRentados;
-        //aqui iria el caso para productos aun no devueltos
-        String productos_no_devueltos="";
-        
-        for(int i=0; i<historialRentas.size();i++){
-
-            HistorialRentas r=historialRentas.get(i);
-            if(r.getDevuelto()==false){
-              EjemplarProducto e=r.getItemProducto();
-              Producto p=e.getProducto();
-            
-              if(i==historialRentas.size()-1)
-                productos_no_devueltos+=p.getNombre();
-              else
-                productos_no_devueltos+=p.getNombre()+",";
-            //}
-        }
-        
-        if (productos_no_devueltos=="")
-           productos_no_devueltos="No hay productos que falten por devolver";
-
-           
-        atributos[7]=productos_no_devueltos;
-        //Preguntar a Jasso sobre si agregar este atributo que no viene en los requerimientos del proyecto 
-        String roles="Usuario";
-        if (usuario.getEsProveedor()==true){
-            roles+=",Proveedor";
-        }
-        if (usuario.getEsAdmin()==true){
-            roles+=",Admin";
-        }
-
-        atributos[8]=roles;
-        return atributos;*/
-
-
-    //}
-    return usuario;
+        return usuario;
     }
 }
