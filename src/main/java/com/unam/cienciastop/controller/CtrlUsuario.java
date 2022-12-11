@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import com.unam.cienciastop.dto.CarreraDTO;
 import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
@@ -34,12 +35,22 @@ public class CtrlUsuario {
     @Autowired
     private SvcUsuario svcUsuario;
 
+
     @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> getUsuariosActivos() {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
     }
+    
 
+    @Secured({"ROLE_USER", "ROLE_ADMIN","ROLE_PROVIDER"})
+    @GetMapping("/usuarios/perfil")
+    public ResponseEntity<Usuario> getPerfil(@AuthenticationPrincipal String numInstitucional) {
+       //Usuario usuario=svcUsuario.getPerfil(idUsuario);
+    
+          return new ResponseEntity<Usuario>(svcUsuario.getPerfil(numInstitucional), HttpStatus.OK);
+
+    }
     /**
      * Metodo que obtiene a la canitdad de usuarios activos por carrera.
      * 
@@ -87,7 +98,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -106,7 +117,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -125,7 +136,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
     
     @Secured("ROLE_ADMIN")
@@ -158,4 +169,7 @@ public class CtrlUsuario {
         }
         return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
     }
+
+
+
 }
