@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
 import com.unam.cienciastop.dto.CarreraDTO;
 import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
@@ -38,7 +40,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.bouncycastle.asn1.ua.UAObjectIdentifiers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -346,6 +347,16 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 		return repoUsuario.findByNumInstitucional(username);
 	}
 
+    @Override
+    public Integer getNumUsuariosInactivos() {
+        return repoUsuario.getUsuariosInactivos().size();
+    }
+
+    @Override
+    public List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias() {
+        return repoUsuario.getUsuariosConMasDevolucionesTardias();
+    }
+    
     //Preguntar a Jasso sobre la etiqueta Transactional y la carpeta Dto
     @Override
     @Transactional(readOnly=true)

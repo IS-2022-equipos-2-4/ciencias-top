@@ -1,7 +1,9 @@
 package com.unam.cienciastop.service;
 
 import java.util.List;
+import java.util.Map;
 
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
 import com.unam.cienciastop.dto.CarreraDTO;
 import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
@@ -46,6 +48,9 @@ public interface SvcUsuario {
 
     public Usuario getUsuario_id(Integer id);
 
+    Integer getNumUsuariosInactivos();
+
+    List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias();
     /**
      * Método que marca un usuario como inactivo
      * @param id_usuario

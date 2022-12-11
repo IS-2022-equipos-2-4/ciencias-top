@@ -44,6 +44,15 @@ public interface DaoProducto extends CrudRepository<Producto,Integer>{
      */
     @Query(value = "SELECT * FROM productos WHERE POSITION (:nombre IN nombre)>0", nativeQuery = true)
     public List<Producto> getProductos_nombre(@Param("nombre") String nombre);
+
+    /**
+     * Metodo que recibe un nombre y regresa la lista de objetos 
+     * Producto asociado a dicho nombre.
+     * @param nombre
+     * @return List<Producto>
+     */
+    @Query(value = "SELECT * FROM productos ORDER BY costo ASC;", nativeQuery = true)
+    public List<Producto> getProductosMenorCosto();
     
     List<Producto> findByProveedor(Usuario proveedor);
 }

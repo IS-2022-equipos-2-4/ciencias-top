@@ -190,4 +190,10 @@ public class CtrlProducto {
         return new ResponseEntity<List<RespuestaGetEjemplaresDTO>>(
                 svcProducto.getEjemplares(idProducto), HttpStatus.OK);
     }
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/productos/reporte/menor-costo")
+    public ResponseEntity<List<Producto>> getProductosMenorCosto(){
+        return new ResponseEntity<>(svcProducto.getProductosMenorCosto(), HttpStatus.OK);
+    }
 }

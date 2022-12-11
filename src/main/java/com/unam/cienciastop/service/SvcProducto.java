@@ -37,6 +37,7 @@ public interface SvcProducto {
      * @return List<Producto>
      */
     public List<Producto> getProductos_nombre(String nombre);
+
     Producto crearProducto(Producto producto, Integer idProveedor);
 
 
@@ -57,4 +58,6 @@ public interface SvcProducto {
     public List<HistorialRentas> verProdRentados(String numInstitucionalUsuario);
 
     public List<RespuestaGetEjemplaresDTO> getEjemplares(Integer idProducto);
+
+    public List<Producto> getProductosMenorCosto();
 }

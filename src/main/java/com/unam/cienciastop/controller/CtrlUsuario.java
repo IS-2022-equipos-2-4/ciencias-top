@@ -1,6 +1,7 @@
 package com.unam.cienciastop.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -13,20 +14,19 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
 import com.unam.cienciastop.dto.CarreraDTO;
 import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 import com.unam.cienciastop.service.SvcUsuario;
-import com.unam.cienciastop.service.SvcUsuarioImpl;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -82,6 +82,17 @@ public class CtrlUsuario {
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
                     "ocurrio un error, no se econtraron usuarios");
+    }
+
+    /**
+     * Metodo que define un endpoint que regresa los usuarios inactivos
+     * 
+     * @return ResponseEntity<List<Usuario>>
+     */
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuarios/reporte/inactivos")
+    public ResponseEntity<Integer> getUsuariosInactivos() {
+        return new ResponseEntity<>(svcUsuario.getNumUsuariosInactivos(), HttpStatus.OK);
     }
 
     /**
@@ -171,11 +182,16 @@ public class CtrlUsuario {
         return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
     }
 
-    @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios/eliminar/{id_usuario}")
     public ResponseEntity<Usuario> eliminarUsuario(
             @PathVariable(value = "id_usuario") Integer id_usuario,
             @AuthenticationPrincipal String numInstitucionalUsuario) {
         return new ResponseEntity<Usuario>(svcUsuario.deleteUsuario(id_usuario,numInstitucionalUsuario), HttpStatus.OK);
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuarios/reporte/devoluciones-tardias")
+    public ResponseEntity<List<UsuarioConMasDevolucionesTardiasDTO>> getUsuariosConMasDevoluciones(){
+        return new ResponseEntity<>(svcUsuario.getUsuariosConMasDevolucionesTardias() ,HttpStatus.OK);
     }
 }
