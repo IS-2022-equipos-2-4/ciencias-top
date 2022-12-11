@@ -12,10 +12,6 @@ import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.entity.Usuario;
 
 public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
-
-    @Query(value = "SELECT * FROM usuarios WHERE activo = true", nativeQuery = true)
-    public List<Usuario> getUsuariosActivos();
-
     /**
      * Metodo que obtiene las carreras con mas usuarios activos.
      * @return Query con las carreras y sus numeros de estudiantes.

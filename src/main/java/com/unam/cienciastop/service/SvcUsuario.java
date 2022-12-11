@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import com.unam.cienciastop.entity.Usuario;
 
 public interface SvcUsuario {
-    List<Usuario> getUsuariosActivos();
+    List<Usuario> getUsuarios();
 
     /*
      * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.

@@ -64,9 +64,9 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     private DaoHistorialRentas repoHistorialRentas;
 
     @Override
-    public List<Usuario> getUsuariosActivos() {
+    public List<Usuario> getUsuarios() {
         try {
-            return repoUsuario.getUsuariosActivos();
+            return (List<Usuario>)repoUsuario.findAll();
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
         } catch (Exception e) {

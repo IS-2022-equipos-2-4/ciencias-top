@@ -39,8 +39,8 @@ public class CtrlUsuario {
 
     @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios")
-    public ResponseEntity<List<Usuario>> getUsuariosActivos() {
-        return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
+    public ResponseEntity<List<Usuario>> getUsuarios() {
+        return new ResponseEntity<>(svcUsuario.getUsuarios(), HttpStatus.OK);
     }
     
 
