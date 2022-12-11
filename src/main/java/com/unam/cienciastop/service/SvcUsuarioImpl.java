@@ -16,6 +16,7 @@ import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
@@ -259,7 +260,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     }
 
     @Override
-    public List<Usuario> getUsuariosConMasDevoluciones() {
-        return repoUsuario.getUsuariosConMasDevoluciones();
+    public List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias() {
+        return repoUsuario.getUsuariosConMasDevolucionesTardias();
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -136,8 +137,8 @@ public class CtrlUsuario {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/usuarios/reportes/3")
-    public ResponseEntity<List<Usuario>> getUsuariosConMasDevoluciones(){
-        return new ResponseEntity<>(svcUsuario.getUsuariosConMasDevoluciones() ,HttpStatus.OK);
+    @GetMapping("/usuarios/reporte/devoluciones-tardias")
+    public ResponseEntity<List<UsuarioConMasDevolucionesTardiasDTO>> getUsuariosConMasDevoluciones(){
+        return new ResponseEntity<>(svcUsuario.getUsuariosConMasDevolucionesTardias() ,HttpStatus.OK);
     }    
 }

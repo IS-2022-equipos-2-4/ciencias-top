@@ -3,6 +3,7 @@ package com.unam.cienciastop.service;
 import java.util.List;
 import java.util.Map;
 
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import org.springframework.http.ResponseEntity;
 
@@ -37,5 +38,5 @@ public interface SvcUsuario {
 
     List<Usuario> getUsuariosInactivos();
 
-    List<Usuario> getUsuariosConMasDevoluciones();
+    List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias();
 }

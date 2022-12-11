@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
 import com.unam.cienciastop.entity.Usuario;
 
 public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
@@ -50,12 +51,15 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     @Query(value = "SELECT * FROM usuarios WHERE POSITION (:correo IN correo)>0", nativeQuery = true)
     public List<Usuario> getUsuarios_correo(@Param("correo") String correo);
 
-    @Query(value = "SELECT b.*,COUNT(*)" +
+    @Query(value = "SELECT b.num_institucional,b.nombre,b.correo,COUNT(*) as devol_tarde " + 
                     "FROM historial_rentas a LEFT JOIN usuarios b ON a.id_usuario = b.id_usuario " +
-                    "WHERE a.devuelto = true" +
-                    "GROUP BY b.id_usuario ORDER BY count DESC LIMIT 10;", 
+                    "LEFT JOIN ejemplar_productos c ON a.id_ejemplar = c.id_ejemplar " + 
+                    "LEFT JOIN productos d ON c.id_producto = d.id_producto " + 
+                    "WHERE a.devuelto = true AND " +
+                    "abs(a.fecha_devolucion - a.fecha_renta) > d.limite_prestamo " + 
+                    "GROUP BY b.id_usuario ORDER BY devol_tarde DESC LIMIT 10;", 
                 nativeQuery=true)
-    public List<Usuario> getUsuariosConMasDevoluciones();
+    public List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias();
 
     Usuario findByNumInstitucional(String numInstitucional);
 }
