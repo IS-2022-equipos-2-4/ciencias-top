@@ -9,12 +9,23 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
+import com.unam.cienciastop.dto.CarreraDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.entity.Usuario;
 
 public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
+    /**
+     * Metodo que obtiene las carreras con mas usuarios activos.
+     * @return Query con las carreras y sus numeros de estudiantes.
+     */
+    @Query(value = "SELECT carrera, COUNT(carrera) FILTER (WHERE activo = true) AS estudiantes_activos FROM usuarios GROUP BY carrera ORDER BY estudiantes_activos DESC", nativeQuery = true)
+    public List<CarreraDTO> getUsuariosCarrera();
 
-    @Query(value = "SELECT * FROM usuarios WHERE activo = true", nativeQuery = true)
-    public List<Usuario> getUsuariosActivos();
+    /**
+     * Metodo que obtiene a los usuarios con mas productos rentados en la semana
+     */
+    @Query(value = "SELECT historial_rentas.id_usuario, carrera, nombre, num_institucional, COUNT(historial_rentas.id_usuario) AS numero_rentas FROM historial_rentas LEFT JOIN usuarios ON historial_rentas.id_usuario = usuarios.id_usuario WHERE EXTRACT(DAY FROM NOW() - fecha_renta) < 7 GROUP BY historial_rentas.id_usuario, usuarios.id_usuario ORDER BY numero_rentas DESC fetch first 5 rows only", nativeQuery = true)
+    public List<TopCincoSemanaUsuariosDTO> getTopCincoUsuariosRentasSemana();
 
 
     /**
