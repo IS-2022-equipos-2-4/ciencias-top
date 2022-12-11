@@ -136,7 +136,7 @@ public class CtrlUsuario {
     }
 
     @Secured("ROLE_ADMIN")
-    @PostMapping("/usuarios/reporte/3")
+    @PostMapping("/usuarios/reportes/3")
     public ResponseEntity<List<Usuario>> getUsuariosConMasDevoluciones(){
         return new ResponseEntity<>(svcUsuario.getUsuariosConMasDevoluciones() ,HttpStatus.OK);
     }    
