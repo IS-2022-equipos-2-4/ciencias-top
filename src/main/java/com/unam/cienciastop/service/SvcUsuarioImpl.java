@@ -2,6 +2,7 @@ package com.unam.cienciastop.service;
 
 import java.io.Console;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,12 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
+import com.unam.cienciastop.dao.DaoHistorialRentas;
 import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.CarreraDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
-import com.unam.cienciastop.dao.DaoHistorialRentas;
+import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
@@ -63,6 +67,34 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     public List<Usuario> getUsuariosActivos() {
         try {
             return repoUsuario.getUsuariosActivos();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Metodo que obtiene las carreras con el numero de usuarios activos.
+     */
+    @Override
+    public List<CarreraDTO> getUsuariosCarrera() {
+        try {
+            return repoUsuario.getUsuariosCarrera();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Metodo que obtiene a los cinco usuarios con mas rentas en el mes.
+     */
+    @Override
+    public List<TopCincoSemanaUsuariosDTO> getTopCincoUsuariosRentasSemana() {
+        try {
+            return repoUsuario.getTopCincoUsuariosRentasSemana();
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
         } catch (Exception e) {
@@ -282,7 +314,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "error en la consulta a la base de datos");
         } catch (Exception e) {
-            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
         }
         
         return usuario;
@@ -313,4 +345,76 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 	public Usuario findByNumInstitucional(String username) {
 		return repoUsuario.findByNumInstitucional(username);
 	}
+
+    //Preguntar a Jasso sobre la etiqueta Transactional y la carpeta Dto
+    @Override
+    @Transactional(readOnly=true)
+    public Usuario getPerfil(String numInstitucional) {
+        Usuario usuario= repoUsuario.findByNumInstitucional(numInstitucional);
+        /*Pumapuntos pumapuntos=(Pumapuntos) repoPumapuntos.getPumapuntos(id);
+        List<HistorialRentas> historialRentas=(List<HistorialRentas>) repoHistorialRentas.rentasByIdUsuario(id);
+
+        String[] atributos=new String[9];
+        atributos[0]=usuario.getNombre();
+        atributos[1]=usuario.getCorreo();
+        atributos[2]=usuario.getNumInstitucional();
+        atributos[3]=usuario.getCarrera();
+        atributos[4]=usuario.getTelefono();
+        
+        atributos[5]=pumapuntos.getSaldo().toString();
+        //aqui iria el get productos rentados
+        String productosRentados="";
+        if(historialRentas.size()==0)
+           productosRentados="No hay productos rentados";
+        else   
+          for (int i=0; i<historialRentas.size();i++){
+           
+              HistorialRentas r=historialRentas.get(i);
+              EjemplarProducto e=r.getItemProducto();
+              Producto p=e.getProducto();
+              if(i==historialRentas.size()-1)
+                productosRentados+=p.getNombre();
+              else
+                productosRentados+=p.getNombre()+",";
+          }
+
+        atributos[6]=productosRentados;
+        //aqui iria el caso para productos aun no devueltos
+        String productos_no_devueltos="";
+        
+        for(int i=0; i<historialRentas.size();i++){
+
+            HistorialRentas r=historialRentas.get(i);
+            if(r.getDevuelto()==false){
+              EjemplarProducto e=r.getItemProducto();
+              Producto p=e.getProducto();
+            
+              if(i==historialRentas.size()-1)
+                productos_no_devueltos+=p.getNombre();
+              else
+                productos_no_devueltos+=p.getNombre()+",";
+            //}
+        }
+        
+        if (productos_no_devueltos=="")
+           productos_no_devueltos="No hay productos que falten por devolver";
+
+           
+        atributos[7]=productos_no_devueltos;
+        //Preguntar a Jasso sobre si agregar este atributo que no viene en los requerimientos del proyecto 
+        String roles="Usuario";
+        if (usuario.getEsProveedor()==true){
+            roles+=",Proveedor";
+        }
+        if (usuario.getEsAdmin()==true){
+            roles+=",Admin";
+        }
+
+        atributos[8]=roles;
+        return atributos;*/
+
+
+    //}
+    return usuario;
+    }
 }

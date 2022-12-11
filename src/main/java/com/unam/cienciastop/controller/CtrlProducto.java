@@ -22,6 +22,7 @@ import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Usuario;
+import com.unam.cienciastop.dto.ProductosDelMesDTO;
 import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
@@ -40,6 +41,22 @@ public class CtrlProducto {
     @GetMapping("/productos")
     public ResponseEntity<List<Producto>> getProductos() {
         return new ResponseEntity<>(svcProducto.getProductos(), HttpStatus.OK);
+    }
+
+    /**
+     * Metodo que despliega los productos mas rentados del mes.
+     * 
+     * @return ResponseEntity<ProductosDelMesDTO>
+     */
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/productos/top")
+    public ResponseEntity<List<ProductosDelMesDTO>> getProductosDelMes() {
+        List<ProductosDelMesDTO> producto = svcProducto.getProductosDelMes();
+        if (producto != null)
+            return new ResponseEntity<>(producto, HttpStatus.OK);
+        else
+            throw new ApiException(HttpStatus.NOT_FOUND, "no existe un producto con ese id");
     }
 
     /**

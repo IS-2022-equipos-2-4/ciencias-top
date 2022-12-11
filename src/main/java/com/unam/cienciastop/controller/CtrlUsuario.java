@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
-
+import com.unam.cienciastop.dto.CarreraDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -35,10 +36,52 @@ public class CtrlUsuario {
     @Autowired
     private SvcUsuario svcUsuario;
 
+
     @Secured("ROLE_ADMIN")
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> getUsuariosActivos() {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
+    }
+    
+
+    @Secured({"ROLE_USER", "ROLE_ADMIN","ROLE_PROVIDER"})
+    @GetMapping("/usuarios/perfil")
+    public ResponseEntity<Usuario> getPerfil(@AuthenticationPrincipal String numInstitucional) {
+       //Usuario usuario=svcUsuario.getPerfil(idUsuario);
+    
+          return new ResponseEntity<Usuario>(svcUsuario.getPerfil(numInstitucional), HttpStatus.OK);
+
+    }
+    /**
+     * Metodo que obtiene a la canitdad de usuarios activos por carrera.
+     * 
+     * @return ResponseEntity<List<CarreraDTO>>
+     */
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuarios/carrera")
+    public ResponseEntity<List<CarreraDTO>> getUsuariosCarrera() {
+        List<CarreraDTO> carrera = svcUsuario.getUsuariosCarrera();
+        if (carrera != null)
+            return new ResponseEntity<>(carrera, HttpStatus.OK);
+        else
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron usuarios");
+    }
+
+    /**
+     * Metodo que despliega a los 5 usuarios con mas rentas en la semana
+     * 
+     * @return ResponseEntity<List<TopCincoSemanaUsuariosDTO>>
+     */
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuarios/rentas")
+    public ResponseEntity<List<TopCincoSemanaUsuariosDTO>> getTopCincoUsuariosRentasSemana() {
+        List<TopCincoSemanaUsuariosDTO> carrera = svcUsuario.getTopCincoUsuariosRentasSemana();
+        if (carrera != null)
+            return new ResponseEntity<>(carrera, HttpStatus.OK);
+        else
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -56,7 +99,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -75,7 +118,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
 
     /**
@@ -94,7 +137,7 @@ public class CtrlUsuario {
             return new ResponseEntity<>(usuario, HttpStatus.OK);
         else
             throw new ApiException(HttpStatus.NOT_FOUND,
-                    "ocurrio un error, no se econtraron usuarios");
+                    "Ocurrio un error, no se econtraron usuarios");
     }
     
     @Secured("ROLE_ADMIN")
