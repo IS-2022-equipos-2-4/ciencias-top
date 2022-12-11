@@ -48,9 +48,6 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     private DaoUsuario repoUsuario;
 
     @Autowired
-    private SvcUsuario svcUsuario;
-
-    @Autowired
     private DaoProducto repoProducto;
 
     @Autowired
@@ -84,7 +81,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
      */   
     @Override    
     public Usuario deleteUsuario(Integer id_usuario, String numInstitucionalUsuario){
-        Usuario requester = this.svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
+        Usuario requester = findByNumInstitucional(numInstitucionalUsuario);
         Integer requester_ID = requester.getId();
         // revisa si el usuario existe
         Usuario usuario = repoUsuario.findById(id_usuario)
@@ -107,7 +104,7 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
         // revisa si el usuario tiene productos rentados sin regresar
         List<HistorialRentas> productosRentados = repoHistorialRentas.rentasByIdUsuario(id_usuario);
-        if (productosRentados.size() != 0 || productosRentados != null){
+        if (productosRentados.size() != 0){
             for (HistorialRentas producto : productosRentados) {
                 if (producto.getDevuelto() == false) {
                     throw new ApiException(HttpStatus.NOT_FOUND, 
