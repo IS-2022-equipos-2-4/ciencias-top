@@ -255,8 +255,8 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 	}
 
     @Override
-    public List<Usuario> getUsuariosInactivos() {
-        return repoUsuario.getUsuariosInactivos();
+    public Integer getNumUsuariosInactivos() {
+        return repoUsuario.getUsuariosInactivos().size();
     }
 
     @Override

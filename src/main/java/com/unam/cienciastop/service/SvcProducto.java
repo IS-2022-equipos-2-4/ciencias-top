@@ -31,6 +31,7 @@ public interface SvcProducto {
      * @return List<Producto>
      */
     public List<Producto> getProductos_nombre(String nombre);
+
     Producto crearProducto(Producto producto, Integer idProveedor);
 
 

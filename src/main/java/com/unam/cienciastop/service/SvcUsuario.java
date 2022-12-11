@@ -36,7 +36,7 @@ public interface SvcUsuario {
 
     public Usuario getUsuario_id(Integer id);
 
-    List<Usuario> getUsuariosInactivos();
+    Integer getNumUsuariosInactivos();
 
     List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias();
 }

@@ -44,9 +44,9 @@ public class CtrlUsuario {
      * @return ResponseEntity<List<Usuario>>
      */
     @Secured("ROLE_ADMIN")
-    @GetMapping("/usuariosInactivos")
-    public ResponseEntity<List<Usuario>> getUsuariosInactivos() {
-        return new ResponseEntity<>(svcUsuario.getUsuariosInactivos(), HttpStatus.OK);
+    @GetMapping("/usuarios/reporte/inactivos")
+    public ResponseEntity<Integer> getUsuariosInactivos() {
+        return new ResponseEntity<>(svcUsuario.getNumUsuariosInactivos(), HttpStatus.OK);
     }
 
     /**
