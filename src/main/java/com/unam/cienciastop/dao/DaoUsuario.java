@@ -51,6 +51,10 @@ public interface DaoUsuario extends CrudRepository<Usuario,Integer>{
     @Query(value = "SELECT * FROM usuarios WHERE POSITION (:correo IN correo)>0", nativeQuery = true)
     public List<Usuario> getUsuarios_correo(@Param("correo") String correo);
 
+    /**
+     * Metodo que regresa los 10 usuarios que mas veces han devuelto tarde
+     * @return UsuarioConMasDevolucionesTardiasDTO
+     */
     @Query(value = "SELECT b.num_institucional,b.nombre,b.correo,COUNT(*) as devol_tarde " + 
                     "FROM historial_rentas a LEFT JOIN usuarios b ON a.id_usuario = b.id_usuario " +
                     "LEFT JOIN ejemplar_productos c ON a.id_ejemplar = c.id_ejemplar " + 
