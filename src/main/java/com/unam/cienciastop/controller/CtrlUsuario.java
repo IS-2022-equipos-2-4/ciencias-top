@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.annotation.Secured;
 
-
+import com.unam.cienciastop.dto.CarreraDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -37,6 +38,38 @@ public class CtrlUsuario {
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> getUsuariosActivos() {
         return new ResponseEntity<>(svcUsuario.getUsuariosActivos(), HttpStatus.OK);
+    }
+
+    /**
+     * Metodo que obtiene a la canitdad de usuarios activos por carrera.
+     * 
+     * @return ResponseEntity<List<CarreraDTO>>
+     */
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuarios/carrera")
+    public ResponseEntity<List<CarreraDTO>> getUsuariosCarrera() {
+        List<CarreraDTO> carrera = svcUsuario.getUsuariosCarrera();
+        if (carrera != null)
+            return new ResponseEntity<>(carrera, HttpStatus.OK);
+        else
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron usuarios");
+    }
+
+    /**
+     * Metodo que despliega a los 5 usuarios con mas rentas en la semana
+     * 
+     * @return ResponseEntity<List<TopCincoSemanaUsuariosDTO>>
+     */
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/usuarios/rentas")
+    public ResponseEntity<List<TopCincoSemanaUsuariosDTO>> getTopCincoUsuariosRentasSemana() {
+        List<TopCincoSemanaUsuariosDTO> carrera = svcUsuario.getTopCincoUsuariosRentasSemana();
+        if (carrera != null)
+            return new ResponseEntity<>(carrera, HttpStatus.OK);
+        else
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "ocurrio un error, no se econtraron usuarios");
     }
 
     /**
