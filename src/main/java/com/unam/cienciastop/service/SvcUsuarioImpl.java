@@ -374,19 +374,40 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
    
     public Integer getNumUsuariosInactivos() {
-        return repoUsuario.getUsuariosInactivos().size();
+        try {
+            return repoUsuario.getUsuariosInactivos().size();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
+        }
     }
 
     @Override
     public List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias() {
-        return repoUsuario.getUsuariosConMasDevolucionesTardias();
+        try{
+            return repoUsuario.getUsuariosConMasDevolucionesTardias();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
+        }
     }
     
     @Override
     @Transactional(readOnly=true)
     public Usuario getPerfil(String numInstitucional) {
-        Usuario usuario= repoUsuario.findByNumInstitucional(numInstitucional);
-
-        return usuario;
+        try{
+            Usuario usuario= repoUsuario.findByNumInstitucional(numInstitucional);
+        
+            return usuario;
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
+        }
     }
 }
