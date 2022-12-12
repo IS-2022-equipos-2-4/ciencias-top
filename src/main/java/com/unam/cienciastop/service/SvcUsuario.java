@@ -51,6 +51,7 @@ public interface SvcUsuario {
     Integer getNumUsuariosInactivos();
 
     List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias();
+    
     /**
      * Método que marca un usuario como inactivo
      * @param id_usuario
@@ -58,5 +59,7 @@ public interface SvcUsuario {
      */
     public Usuario deleteUsuario(Integer id_usuario, String numInstitucionalUsuario);
 
-    public Usuario getPerfil(String numInstitucional);; 
+    public Usuario getPerfil(String numInstitucional);
+
+    public void editarContraseña(String num_institucional, String contraseña);
 }

@@ -348,6 +348,31 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 	}
 
     @Override
+    public void editarContraseña(String num_institucional, String contraseña) {
+        //Verificar que la contraseña no sea vacia
+        if(contraseña == null) {
+            throw new ApiException(HttpStatus.NOT_FOUND, 
+                        "Imposible cambiar contraseña, contraseña vacia.");
+
+		}else {
+
+            try {
+
+				Usuario usuario = repoUsuario.findByNumInstitucional(num_institucional);
+				// encriptar la contraseña
+				usuario.setContraseña(passwordEncoder.encode(contraseña));
+                repoUsuario.save(usuario);
+            } catch (DataAccessException e) {
+                throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "error en la consulta a la base de datos");
+				
+            } catch (Exception e) {
+                throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+            }    
+        } 
+    }
+
+   
     public Integer getNumUsuariosInactivos() {
         return repoUsuario.getUsuariosInactivos().size();
     }

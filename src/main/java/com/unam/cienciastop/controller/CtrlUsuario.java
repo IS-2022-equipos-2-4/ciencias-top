@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -180,6 +181,23 @@ public class CtrlUsuario {
                     bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
         return new ResponseEntity<Usuario>(svcUsuario.editarUsuario(id_usuario, usuarioDTO),HttpStatus.OK);
+    }
+    
+    /**
+     * Metodo que modifica la contraseña.
+     * 
+     * @param modifica contraseña
+     * @return ResponseEntity<List<Usuario>>
+     */
+
+    @Secured({"ROLE_ADMIN","ROLE_USER","ROLE_PROVIDER"})
+    @PutMapping("/usuarios/cambiar-contrasena/{contraseña}")
+    public ResponseEntity<HttpStatus> editarContraseña(
+            @PathVariable(value = "contraseña") String contraseña, 
+            @AuthenticationPrincipal String num_institucional
+    ){   
+        svcUsuario.editarContraseña(num_institucional,contraseña);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/usuarios/eliminar/{id_usuario}")
