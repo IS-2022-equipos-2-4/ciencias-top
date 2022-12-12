@@ -200,6 +200,7 @@ public class CtrlUsuario {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Secured("ROLE_ADMIN")
     @PostMapping("/usuarios/eliminar/{id_usuario}")
     public ResponseEntity<Usuario> eliminarUsuario(
             @PathVariable(value = "id_usuario") Integer id_usuario,
