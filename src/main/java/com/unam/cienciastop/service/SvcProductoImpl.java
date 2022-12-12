@@ -23,10 +23,12 @@ import com.unam.cienciastop.dao.DaoEjemplarProducto;
 import com.unam.cienciastop.dao.DaoHistorialRentas;
 import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.dao.DaoPumapuntos;
+import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
+import com.unam.cienciastop.entity.Role;
 import com.unam.cienciastop.entity.Usuario;
 import com.unam.cienciastop.exceptionHandler.ApiException;
 
@@ -47,6 +49,9 @@ public class SvcProductoImpl implements SvcProducto {
 
     @Autowired
     private DaoHistorialRentas repoHistorialRentas;
+
+    @Autowired
+    private DaoRoles repoRoles;
 
     @Autowired
     private SvcEjemplarProducto svcEProducto;
@@ -267,6 +272,34 @@ public class SvcProductoImpl implements SvcProducto {
         }
 
         return new RespuestaDevolverEjemplarDTO(devolucionTardia);
+    }
+
+    @Override
+    public void eliminarProducto(Integer idProducto, String numInstitucionalUsuario){
+        Producto producto = this.repoProducto.findById(idProducto).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+        "no existe un producto con el id especificado"));
+
+        List<EjemplarProducto> ejemplaresDisponibles =
+                this.repoEjemplarProducto.getEjemplaresDisponiblesByIdProducto(idProducto);
+        List<EjemplarProducto> ejemplaresTotales =
+        this.repoEjemplarProducto.getEjemplaresByIdProducto(idProducto);
+        if(ejemplaresDisponibles.size() < ejemplaresTotales.size()){
+            throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "no se puede elimiinar el producto, tiene ejemplares rentados");
+        }
+
+        Usuario usuario =  svcUsuario.findByNumInstitucional(numInstitucionalUsuario);
+        List<Role> rolesUsuario = usuario.getRoles();
+        Role admin = repoRoles.findById(1L).get();
+
+        if(!producto.getProveedor().equals(usuario)){
+            if(!rolesUsuario.contains(admin)){
+                throw new ApiException(HttpStatus.NOT_ACCEPTABLE,
+                    "no se puede eliminar el producto, no eres el proveedor del producto");
+            }
+            
+        }
+        repoProducto.delete(producto);
     }
 
     @Override
