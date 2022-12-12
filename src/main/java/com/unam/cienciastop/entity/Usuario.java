@@ -165,5 +165,15 @@ public class Usuario implements Serializable{
 		return roles;
 	}
 
-
+   /*  @Override
+    public String toString(){
+        String cadena="";
+        cadena+=this.nombre;
+        cadena+=",\n"+this.numInstitucional;
+        cadena+=",\n"+this.carrera;
+        cadena+=",\n"+this.telefono;
+        cadena+=",\n"+this.correo;
+        //cadena+=",\n"+this.roles;
+        return cadena;
+    }*/
 }

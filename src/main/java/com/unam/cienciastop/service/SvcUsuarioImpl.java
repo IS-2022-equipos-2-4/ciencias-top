@@ -1,21 +1,31 @@
 package com.unam.cienciastop.service;
 
+import java.io.Console;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
+import com.unam.cienciastop.dao.DaoHistorialRentas;
 import com.unam.cienciastop.dao.DaoProducto;
 import com.unam.cienciastop.dao.DaoPumapuntos;
 import com.unam.cienciastop.dao.DaoRoles;
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.UsuarioConMasDevolucionesTardiasDTO;
+import com.unam.cienciastop.dto.CarreraDTO;
+import com.unam.cienciastop.dto.TopCincoSemanaUsuariosDTO;
 import com.unam.cienciastop.dto.UsuarioDTO;
+import com.unam.cienciastop.entity.EjemplarProducto;
+import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.Pumapuntos;
 import com.unam.cienciastop.entity.Role;
@@ -30,7 +40,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.bouncycastle.asn1.ua.UAObjectIdentifiers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,10 +61,41 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
     @Autowired
     private DaoRoles repoRoles;
 
+    @Autowired
+    private DaoHistorialRentas repoHistorialRentas;
+
     @Override
-    public List<Usuario> getUsuariosActivos() {
+    public List<Usuario> getUsuarios() {
         try {
-            return repoUsuario.getUsuariosActivos();
+            return (List<Usuario>)repoUsuario.findAll();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Metodo que obtiene las carreras con el numero de usuarios activos.
+     */
+    @Override
+    public List<CarreraDTO> getUsuariosCarrera() {
+        try {
+            return repoUsuario.getUsuariosCarrera();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Metodo que obtiene a los cinco usuarios con mas rentas en el mes.
+     */
+    @Override
+    public List<TopCincoSemanaUsuariosDTO> getTopCincoUsuariosRentasSemana() {
+        try {
+            return repoUsuario.getTopCincoUsuariosRentasSemana();
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.NOT_FOUND, "error en la consulta a la base de datos");
         } catch (Exception e) {
@@ -68,6 +108,60 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
                         "error, no se puede obtener un usuario inexistente."));
     };
+
+    /**
+     * Método que marca a un usuario como inactivo en la BD.
+     */   
+    @Override    
+    public Usuario deleteUsuario(Integer id_usuario, String numInstitucionalUsuario){
+        Usuario requester = findByNumInstitucional(numInstitucionalUsuario);
+        Integer requester_ID = requester.getId();
+        // revisa si el usuario existe
+        Usuario usuario = repoUsuario.findById(id_usuario)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
+                "error, no se puede modificar un usuario inexistente."));
+        
+        // revisa si el usuario es el usuario activo        
+        if(requester_ID == id_usuario){
+            throw new ApiException(HttpStatus.BAD_REQUEST, "No puedes eliminar tu propio usuario");
+        }
+
+        // revisa si el usuario es proveedor, si es así, revisa si tiene productos registrados
+        if (usuario.getEsProveedor()) {
+            List<Producto> productosProveedor = repoProducto.findByProveedor(usuario);
+            if (productosProveedor.size() != 0 || productosProveedor == null){
+                throw new ApiException(HttpStatus.NOT_FOUND, 
+                    "Imposible eliminar el usuario. El usuario tiene productos registrados");            
+            }
+        }        
+
+        // revisa si el usuario tiene productos rentados sin regresar
+        List<HistorialRentas> productosRentados = repoHistorialRentas.rentasByIdUsuario(id_usuario);
+        if (productosRentados.size() != 0){
+            for (HistorialRentas producto : productosRentados) {
+                if (producto.getDevuelto() == false) {
+                    throw new ApiException(HttpStatus.NOT_FOUND, 
+                            "Imposible eliminar el usuario. El usuario tiene adeudos");    
+                }       
+            }       
+        }
+            
+        // establece el estado del usuario como 'no activo'
+        usuario.setActivo(false);
+        // guarda los cambios en la BD
+        try {
+            repoUsuario.save(usuario);        
+            return usuario;
+        } catch (DataIntegrityViolationException e) {
+            throw new ApiException(HttpStatus.NOT_FOUND,
+                    "error, ya hay un usuario registrado con ese correo o no. cuenta / trabajador");
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getLocalizedMessage());
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }      
+    }
 
     /*
      * Metodo que recibe un nombre y regresa la lista de objetos Usuario asociado a dicho nombre.
@@ -151,13 +245,13 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
         } catch (Exception e) {
             throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
         }
-    }
+    } 
 
     @Override
     public Usuario editarUsuario(Integer id_usuario, UsuarioDTO usuarioDto) {
         Usuario usuario = repoUsuario.findById(id_usuario)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
-                        "error, no se puede modificar un usuario inexistente."));
+                        "Error, no se puede modificar un usuario inexistente."));
 
         List<Role> roles = usuario.getRoles();
 
@@ -255,11 +349,8 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 
     @Override
     public void editarContraseña(String num_institucional, String contraseña) {
-
-        
         //Verificar que la contraseña no sea vacia
         if(contraseña == null) {
-
             throw new ApiException(HttpStatus.NOT_FOUND, 
                         "Imposible cambiar contraseña, contraseña vacia.");
 
@@ -270,21 +361,32 @@ public class SvcUsuarioImpl implements SvcUsuario, UserDetailsService{
 				Usuario usuario = repoUsuario.findByNumInstitucional(num_institucional);
 				// encriptar la contraseña
 				usuario.setContraseña(passwordEncoder.encode(contraseña));
-
+                repoUsuario.save(usuario);
             } catch (DataAccessException e) {
                 throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                         "error en la consulta a la base de datos");
 				
             } catch (Exception e) {
                 throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
-            }
-
-               
+            }    
         } 
-        
     }
 
-
-
    
+    public Integer getNumUsuariosInactivos() {
+        return repoUsuario.getUsuariosInactivos().size();
+    }
+
+    @Override
+    public List<UsuarioConMasDevolucionesTardiasDTO> getUsuariosConMasDevolucionesTardias() {
+        return repoUsuario.getUsuariosConMasDevolucionesTardias();
+    }
+    
+    @Override
+    @Transactional(readOnly=true)
+    public Usuario getPerfil(String numInstitucional) {
+        Usuario usuario= repoUsuario.findByNumInstitucional(numInstitucional);
+
+        return usuario;
+    }
 }
