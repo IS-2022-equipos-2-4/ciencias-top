@@ -299,7 +299,15 @@ public class SvcProductoImpl implements SvcProducto {
             }
             
         }
-        repoProducto.delete(producto);
+        try{
+            repoProducto.delete(producto);
+
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
+        }
     }
 
     @Override
@@ -389,6 +397,13 @@ public class SvcProductoImpl implements SvcProducto {
 
     @Override
     public List<Producto> getProductosMenorCosto() {
-        return repoProducto.getProductosMenorCosto();
+        try{
+            return repoProducto.getProductosMenorCosto();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
+        }
     }
 }
