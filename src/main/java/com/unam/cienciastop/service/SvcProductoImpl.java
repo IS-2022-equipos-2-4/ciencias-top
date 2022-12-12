@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.unam.cienciastop.dao.DaoUsuario;
+import com.unam.cienciastop.dto.ProductosDelMesDTO;
+import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.dao.DaoEjemplarProducto;
@@ -64,6 +66,21 @@ public class SvcProductoImpl implements SvcProducto {
     public List<Producto> getProductos() {
         try {
             return (List<Producto>) repoProducto.findAll();
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "error en la consulta a la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.NOT_FOUND, e.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * Metodo que despliega los productos mas rentados del mes.
+     */
+    @Override
+    public List<ProductosDelMesDTO> getProductosDelMes() {
+        try {
+            return repoProducto.getProductosDelMes();
         } catch (DataAccessException e) {
             throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "error en la consulta a la base de datos");
@@ -257,9 +274,6 @@ public class SvcProductoImpl implements SvcProducto {
         return new RespuestaDevolverEjemplarDTO(devolucionTardia);
     }
 
-    /*
-     * 
-     */
     @Override
     public void eliminarProducto(Integer idProducto, String numInstitucionalUsuario){
         Producto producto = this.repoProducto.findById(idProducto).orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND,
@@ -288,6 +302,30 @@ public class SvcProductoImpl implements SvcProducto {
         repoProducto.delete(producto);
     }
 
+    @Override
+    public Producto editarProducto(Integer id_producto, ProductoDTO productodto) {
+        Producto prod = repoProducto.findById(id_producto)
+            .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, 
+                "error, no se puede editar un producto que no existe."));
+
+        prod.setCodigo(productodto.getCodigo());
+        prod.setNombre(productodto.getNombre());
+        prod.setDescripcion(productodto.getDescripcion());
+        prod.setCosto(productodto.getCosto());
+        prod.setLimitePrestamo(productodto.getLimitePrestamo());
+
+        try {
+            repoProducto.save(prod);
+        } catch (DataAccessException e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR,
+                "error al consultar la base de datos");
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.I_AM_A_TEAPOT, e.getLocalizedMessage());
+        }
+        
+        return prod;
+    }
+    
     /**
      * Metodo que recibe un numInstitucionalUsuario y regresa la lista de objetos HistorialRentas
      * asociado a dicho idEjemplar.
@@ -347,5 +385,10 @@ public class SvcProductoImpl implements SvcProducto {
         }).collect(Collectors.toList());
 
         return respuesta;
+    }
+
+    @Override
+    public List<Producto> getProductosMenorCosto() {
+        return repoProducto.getProductosMenorCosto();
     }
 }

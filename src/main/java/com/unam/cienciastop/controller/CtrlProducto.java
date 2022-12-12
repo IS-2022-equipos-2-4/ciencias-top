@@ -25,6 +25,8 @@ import com.unam.cienciastop.entity.Producto;
 import com.unam.cienciastop.entity.EjemplarProducto;
 import com.unam.cienciastop.entity.HistorialRentas;
 import com.unam.cienciastop.entity.Usuario;
+import com.unam.cienciastop.dto.ProductosDelMesDTO;
+import com.unam.cienciastop.dto.ProductoDTO;
 import com.unam.cienciastop.dto.RespuestaDevolverEjemplarDTO;
 import com.unam.cienciastop.dto.RespuestaGetEjemplaresDTO;
 import com.unam.cienciastop.exceptionHandler.ApiException;
@@ -42,6 +44,22 @@ public class CtrlProducto {
     @GetMapping("/productos")
     public ResponseEntity<List<Producto>> getProductos() {
         return new ResponseEntity<>(svcProducto.getProductos(), HttpStatus.OK);
+    }
+
+    /**
+     * Metodo que despliega los productos mas rentados del mes.
+     * 
+     * @return ResponseEntity<ProductosDelMesDTO>
+     */
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/productos/top")
+    public ResponseEntity<List<ProductosDelMesDTO>> getProductosDelMes() {
+        List<ProductosDelMesDTO> producto = svcProducto.getProductosDelMes();
+        if (producto != null)
+            return new ResponseEntity<>(producto, HttpStatus.OK);
+        else
+            throw new ApiException(HttpStatus.NOT_FOUND, "no existe un producto con ese id");
     }
 
     /**
@@ -112,6 +130,20 @@ public class CtrlProducto {
                 HttpStatus.CREATED);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_PROVIDER"})
+    @PostMapping("/productos/editar/{id_producto}")
+    public ResponseEntity<Producto> editarProducto(
+            @PathVariable(value = "id_producto") Integer id_producto,
+            @Valid @RequestBody ProductoDTO productodto,
+            BindingResult bindingRes) {
+        if (bindingRes.hasErrors()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, 
+                    bindingRes.getAllErrors().get(0).getDefaultMessage());
+        }
+        return new ResponseEntity<Producto>(svcProducto.editarProducto(id_producto, productodto), HttpStatus.OK);
+    }
+
+
     @Secured({"ROLE_USER", "ROLE_ADMIN", "ROLE_PROVIDER"})
     @PostMapping("/productos/{id_producto}/rentar")
     public ResponseEntity<EjemplarProducto> rentarProducto(
@@ -175,5 +207,11 @@ public class CtrlProducto {
             @PathVariable(value = "id_producto") Integer idProducto) {
         return new ResponseEntity<List<RespuestaGetEjemplaresDTO>>(
                 svcProducto.getEjemplares(idProducto), HttpStatus.OK);
+    }
+
+    @Secured({"ROLE_ADMIN"})
+    @GetMapping("/productos/reporte/menor-costo")
+    public ResponseEntity<List<Producto>> getProductosMenorCosto(){
+        return new ResponseEntity<>(svcProducto.getProductosMenorCosto(), HttpStatus.OK);
     }
 }
