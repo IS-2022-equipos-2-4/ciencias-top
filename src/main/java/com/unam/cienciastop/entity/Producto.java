@@ -53,7 +53,6 @@ public class Producto implements Serializable {
 
     // cantidad de productos disponibles para rentar
     @Column(name = "stock", nullable = false)
-    @Min(value = 1, message = "el minimo de stock es 1")
     @NotNull(message = "No ingresaste el número de stock del producto")
     private Integer stock;
 

@@ -65,4 +65,6 @@ public class EjemplarProducto implements Serializable {
         this.disponible = disponible;
         this.producto = producto;
     }
+
+    public EjemplarProducto() {}
 }

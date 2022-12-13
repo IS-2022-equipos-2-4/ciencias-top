@@ -24,7 +24,7 @@ public class HistorialRentas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id_renta")
-    private String idRenta;
+    private Integer idRenta;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_usuario")
@@ -36,18 +36,21 @@ public class HistorialRentas {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private EjemplarProducto itemProducto;
 
-    @Column(name="fecha")
-    private LocalDate fecha;
+    @Column(name="fecha_renta")
+    private LocalDate fecha_renta;
+
+    @Column(name="fecha_devolucion")
+    private LocalDate fecha_devolucion;
 
     // Indica si el producto rentado por el usuario ya fue devuelto
     @Column(name = "devuelto")
     private Boolean devuelto;
 
-    public String getIdRenta() {
+    public Integer getIdRenta() {
         return idRenta;
     }
 
-    public void setIdRenta(String idRenta) {
+    public void setIdRenta(Integer idRenta) {
         this.idRenta = idRenta;
     }
 
@@ -67,12 +70,20 @@ public class HistorialRentas {
         this.itemProducto = itemProducto;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public LocalDate getFechaRenta() {
+        return fecha_renta;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setFechaRenta(LocalDate fechaRenta) {
+        this.fecha_renta = fechaRenta;
+    }
+
+    public LocalDate getFechaDevolucion() {
+        return fecha_devolucion;
+    }
+
+    public void setFechaDevolucion(LocalDate fechaDevolucion) {
+        this.fecha_devolucion = fechaDevolucion;
     }
 
     public Boolean getDevuelto() {
