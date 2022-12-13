@@ -191,9 +191,9 @@ public class CtrlUsuario {
      */
 
     @Secured({"ROLE_ADMIN","ROLE_USER","ROLE_PROVIDER"})
-    @PutMapping("/usuarios/cambiar-contrasena/{contraseña}")
+    @PutMapping("/usuarios/cambiar-contrasena/{contrasena}")
     public ResponseEntity<HttpStatus> editarContraseña(
-            @PathVariable(value = "contraseña") String contraseña, 
+            @PathVariable(value = "contrasena") String contraseña, 
             @AuthenticationPrincipal String num_institucional
     ){   
         svcUsuario.editarContraseña(num_institucional,contraseña);
